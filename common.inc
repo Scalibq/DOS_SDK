@@ -1,0 +1,2 @@
+PPIPORTB	equ	061h
+DELAY_PORT		equ	0EEh
