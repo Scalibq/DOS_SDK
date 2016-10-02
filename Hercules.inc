@@ -121,3 +121,59 @@ SET_HERC_TEXT	MACRO
 	mov dx, MODE_CONTROL
 	mov al, (MODE_BLINK or MODE_VIDEO_ENABLE)
 ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
+WaitVBL0 MACRO FLAG
+LOCAL @@loopVBL0
+
+@@loopVBL0:
+	in al, dx
+	test al, FLAG
+	jz @@loopVBL0		; Inverted flag on Hercules
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
+WaitVBL1 MACRO FLAG
+LOCAL @@loopVBL1
+
+@@loopVBL1:
+	in al, dx
+	test al, FLAG
+	jnz @@loopVBL1	; Inverted flag on Hercules
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
+WaitHBL0 MACRO FLAG
+LOCAL @@loopHBL0, @@done
+
+	; Unroll 10 times, should be enough for 4.77 MHz
+@@loopHBL0:
+	REPT 10
+		in al, dx
+		test al, FLAG
+		jz @@done
+	ENDM
+	test al, FLAG
+	jnz @@loopHBL0
+@@done:
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
+WaitHBL1 MACRO FLAG
+LOCAL @@loopHBL1, @@done
+
+	; Unroll 10 times, should be enough for 4.77 MHz
+@@loopHBL1:
+	REPT 10
+		in al, dx
+		test al, FLAG
+		jnz @@done
+	ENDM
+	test al, FLAG
+	jz @@loopHBL1
+@@done:
+ENDM
