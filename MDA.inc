@@ -12,5 +12,5 @@ MODE_VIDEO_ENABLE	equ	08h	; Enables the video signal, disable when changing mode
 MODE_BLINK			equ	20h	; Enables blink attribute in alphanumeric modes
 
 ; VIDEO_STATUS bits
-VS_H_DRIVE		equ	01h	; Horizontal drive (current video signal sent to monitor)
+VS_HRETRACE		equ	01h	; Horizontal drive: 1 if in horizontal retrace, else 0
 VS_BW			equ	08h	; Black-and-white video
