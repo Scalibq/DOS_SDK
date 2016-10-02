@@ -78,6 +78,7 @@ SET_HERC_GRAPHICS	MACRO
 	; Enable video
 	mov dx, MODE_CONTROL
 	mov al, (GRAPHICS_MODE or MODE_VIDEO_ENABLE)
+	out dx, al
 ENDM
 
 SET_HERC_TEXT	MACRO
@@ -120,6 +121,7 @@ SET_HERC_TEXT	MACRO
 	; Enable video
 	mov dx, MODE_CONTROL
 	mov al, (MODE_BLINK or MODE_VIDEO_ENABLE)
+	out dx, al
 ENDM
 
 ; Set DX to VIDEO_STATUS register beforehand
