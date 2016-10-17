@@ -1,34 +1,47 @@
 ; Hercules is a superset of MDA
 include MDA.inc
 
+; MDA/Hercules CRT controller
+HERC_CRTC_INDEX	equ	MDA_CRTC_INDEX
+HERC_CRTC_DATA 	equ	MDA_CRTC_DATA
+
+HERC_MODE_CTRL		equ	MDA_MODE_CTRL
+HERC_VIDEO_STATUS	equ	MDA_VIDEO_STATUS
+
+HERC_MC_HRES			equ	MDA_MC_HRES
+HERC_MC_VIDEO_ENABLE	equ	MDA_MC_VIDEO_ENABLE
+HERC_MC_BLINK			equ	MDA_MC_BLINK
+
+HERC_VS_HRETRACE	equ	MDA_VS_HRETRACE
+HERC_VS_BW			equ	MDA_VS_BW
+
 ; Additional Hercules registers next to standard 6845/MDA
 ;             NOTE: Be sure that the Configuration Port (03BF) is set to your
 ;             requirements (03BF = 1 for HALF, 03BF = 3 for FULL) before
 ;             attempting to set graphics mode.
 
-
 HERC_ENABLE			equ	03BFh
 
 ; MODE_CONTROL bits
-GRAPHICS_MODE		equ 02h	; Enables graphics mode (720x348), else alphanumeric mode
-GRAPHICS_PAGE_1		equ	80h	; Enables video page at segment B800h, else B000h
+HERC_GFX_MODE		equ 02h	; Enables graphics mode (720x348), else alphanumeric mode
+HERC_GFX_PAGE_1		equ	80h	; Enables video page at segment B800h, else B000h
 
 ; VIDEO_STATUS bits
-VS_VRETRACE			equ 80h	; 0 if in vertical retrace, else 1
+HERC_VS_VRETRACE	equ 80h	; 0 if in vertical retrace, else 1
 
 ; HERC_ENABLE bits
-HE_ENABLE	equ	01h	; Enable Hercules graphics mode
-HE_FULL		equ	02h	; Enable full 64KB memory (2 graphics pages), else 32KB (for compatibility with CGA)
+HERC_HE_ENABLE	equ	01h	; Enable Hercules graphics mode
+HERC_HE_FULL		equ	02h	; Enable full 64KB memory (2 graphics pages), else 32KB (for compatibility with CGA)
 
 INIT_HERC_HALF	MACRO
 	mov dx, HERC_ENABLE
-	mov al, HE_ENABLE
+	mov al, HERC_HE_ENABLE
 	out dx, al
 ENDM
 
 INIT_HERC_FULL	MACRO
 	mov dx, HERC_ENABLE
-	mov al, (HE_ENABLE or HE_FULL)
+	mov al, (HERC_HE_ENABLE or HERC_HE_FULL)
 	out dx, al
 ENDM
 
@@ -40,8 +53,8 @@ ENDM
 
 SET_HERC_GRAPHICS	MACRO
 	; Disable video
-	mov dx, MODE_CONTROL
-	mov al, GRAPHICS_MODE
+	mov dx, HERC_MODE_CTRL
+	mov al, HERC_MC_GFX_MODE
 	out dx, al
 	
 	; Graphics mode (HGC)
@@ -49,7 +62,7 @@ SET_HERC_GRAPHICS	MACRO
 	; Each row is 4 scanlines
 	
 	; Set up 6845 parameters
-	mov dx, CRTC_INDEX
+	mov dx, HERC_CRTC_INDEX
 	mov ax, 3500h	;	35h: Horizontal total: 53 characters ('minus one': 54*2*8 = 864 pixels)
 	out dx, ax
 	mov ax, 2d01h	;	2dh: Horizontal displayed: 45 characters (45*2*8 = 720 pixels)
@@ -76,15 +89,15 @@ SET_HERC_GRAPHICS	MACRO
 	out dx, ax
 	
 	; Enable video
-	mov dx, MODE_CONTROL
-	mov al, (GRAPHICS_MODE or MODE_VIDEO_ENABLE)
+	mov dx, HERC_MODE_CTRL
+	mov al, (HERC_MC_GFX_MODE or HERC_MC_VIDEO_ENABLE)
 	out dx, al
 ENDM
 
 SET_HERC_TEXT	MACRO
 	; Disable video
-	mov dx, MODE_CONTROL
-	mov al, MODE_BLINK
+	mov dx, HERC_MODE_CTRL
+	mov al, HERC_MODE_BLINK
 	out dx, al
 	
 	; Text mode (MDA)
@@ -92,7 +105,7 @@ SET_HERC_TEXT	MACRO
 	; Each row is 14 scanlines
 	
 	; Set up 6845 parameters
-	mov dx, CRTC_INDEX
+	mov dx, HERC_CRTC_INDEX
 	mov ax, 6100h	;	61h:	Horizontal total: 97 characters ('minus one', 98*9 = 882 pixels)
 	out dx, ax
 	mov ax, 5001h	;	50h:	Horizontal displayed: 80 characters (80*9 = 720 pixels)
@@ -119,8 +132,8 @@ SET_HERC_TEXT	MACRO
 	out dx, ax
 		
 	; Enable video
-	mov dx, MODE_CONTROL
-	mov al, (MODE_BLINK or MODE_VIDEO_ENABLE)
+	mov dx, HERC_MODE_CTRL
+	mov al, (HERC_MC_BLINK or HERC_MC_VIDEO_ENABLE)
 	out dx, al
 ENDM
 
