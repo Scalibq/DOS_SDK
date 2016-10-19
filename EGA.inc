@@ -17,6 +17,8 @@ EGA_INPUT_STATUS1	equ	03DAh
 ; EGA CRTC registers
 ;	equ	00h	;	Horizontal Total
 ;	equ	01h	;	Horizontal Display End
+
+; These registers are re-defined
 ;	equ	02h	;	Start Horizontal Blank
 ;	equ	03h	;	End Horizontal Blank
 ;	equ	04h	;	Start Horizontal Retrace
@@ -36,12 +38,12 @@ EGA_INPUT_STATUS1	equ	03DAh
 ;	equ	11h	;	Vertical Retrace End
 ;	equ	11h	;	Light Pen Low
 ;	equ	12h	;	Vertical Display End
-;	equ	13h	;	Offset
-;	equ	14h	;	Underline Location
-;	equ	15h	;	Start Vertical Blank
-;	equ	16h	;	End Vertical Blank
-;	equ	17h	;	Mode Control
-;	equ	18h	;	Line Compare
+EGA_OFFSET	equ	13h	;	Offset
+EGA_UL_LOC		equ	14h	;	Underline Location
+EGA_START_VBLA	equ	15h	;	Start Vertical Blank
+EGA_END_VBL		equ	16h	;	End Vertical Blank
+EGA_MODE_CTRL	equ	17h	;	Mode Control
+EGA_LINE_COMP	equ	18h	;	Line Compare
 
 ; MODE_CONTROL bits
 EGA_MC_80C			equ	01h	; Enables 80x25 alphanumeric mode, else 40x25 mode
