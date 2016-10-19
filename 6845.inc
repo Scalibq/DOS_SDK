@@ -1,7 +1,7 @@
 ; 6845 CRTC registers
 ; MC_ prefix for "Motorola 6845 CRTC"
 MC_H_TOTAL			equ 00h	; Horizontal Total
-MC_H_DIS			equ	01h	; Horizontal Displayed	(in characters)
+MC_H_DISP			equ	01h	; Horizontal Displayed (in characters)
 MC_HSYNC_POS		equ	02h	; Horizontal Sync Position (in characters)
 MC_HSYNC_WIDTH		equ	03h	; Horizontal Sync Width (in characters)
 MC_V_TOTAL			equ	04h	; Vertical Total (in character rows)
