@@ -1,5 +1,6 @@
 ; Hercules is a superset of MDA
 include MDA.inc
+include common.inc
 
 ; MDA/Hercules CRT controller
 HERC_CRTC_INDEX	equ	MDA_CRTC_INDEX
@@ -23,8 +24,8 @@ HERC_VS_BW			equ	MDA_VS_BW
 HERC_ENABLE			equ	03BFh
 
 ; MODE_CONTROL bits
-HERC_GFX_MODE		equ 02h	; Enables graphics mode (720x348), else alphanumeric mode
-HERC_GFX_PAGE_1		equ	80h	; Enables video page at segment B800h, else B000h
+HERC_MC_GFX_MODE		equ 02h	; Enables graphics mode (720x348), else alphanumeric mode
+HERC_MC_GFX_PAGE_1		equ	80h	; Enables video page at segment B800h, else B000h
 
 ; VIDEO_STATUS bits
 HERC_VS_VRETRACE	equ 80h	; 0 if in vertical retrace, else 1
@@ -97,7 +98,7 @@ ENDM
 SET_HERC_TEXT	MACRO
 	; Disable video
 	mov dx, HERC_MODE_CTRL
-	mov al, HERC_MODE_BLINK
+	mov al, HERC_MC_BLINK
 	out dx, al
 	
 	; Text mode (MDA)
@@ -138,57 +139,23 @@ SET_HERC_TEXT	MACRO
 ENDM
 
 ; Set DX to VIDEO_STATUS register beforehand
-; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
-WaitVBL0 MACRO FLAG
-LOCAL @@loopVBL0
-
-@@loopVBL0:
-	in al, dx
-	test al, FLAG
-	jz @@loopVBL0		; Inverted flag on Hercules
+HERC_VBLStart MACRO
+	; Inverted flag on Hercules
+	WaitBIT0 DX, HERC_VS_VRETRACE
 ENDM
 
 ; Set DX to VIDEO_STATUS register beforehand
-; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
-WaitVBL1 MACRO FLAG
-LOCAL @@loopVBL1
-
-@@loopVBL1:
-	in al, dx
-	test al, FLAG
-	jnz @@loopVBL1	; Inverted flag on Hercules
+HERC_VBLEnd MACRO
+	; Inverted flag on Hercules
+	WaitBIT1 DX, HERC_VS_VRETRACE
 ENDM
 
 ; Set DX to VIDEO_STATUS register beforehand
-; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
-WaitHBL0 MACRO FLAG
-LOCAL @@loopHBL0, @@done
-
-	; Unroll 10 times, should be enough for 4.77 MHz
-@@loopHBL0:
-	REPT 10
-		in al, dx
-		test al, FLAG
-		jz @@done
-	ENDM
-	test al, FLAG
-	jnz @@loopHBL0
-@@done:
+HERC_HBLStart MACRO
+	WaitBIT1 DX, HERC_VS_HRETRACE, 10	; Unroll 10 times, should be enough for 4.77 MHz
 ENDM
 
 ; Set DX to VIDEO_STATUS register beforehand
-; Set FLAG to a register or immediate to test against the VIDEO_STATUS register
-WaitHBL1 MACRO FLAG
-LOCAL @@loopHBL1, @@done
-
-	; Unroll 10 times, should be enough for 4.77 MHz
-@@loopHBL1:
-	REPT 10
-		in al, dx
-		test al, FLAG
-		jnz @@done
-	ENDM
-	test al, FLAG
-	jz @@loopHBL1
-@@done:
+HERC_HBLEnd MACRO
+	WaitBIT0 DX, HERC_VS_HRETRACE, 10	; Unroll 10 times, should be enough for 4.77 MHz
 ENDM
