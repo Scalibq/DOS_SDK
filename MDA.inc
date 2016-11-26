@@ -1,4 +1,5 @@
 include 6845.inc
+include common.inc
 
 ; MDA CRT controller
 MDA_CRTC_INDEX	equ	03B4h
@@ -16,3 +17,13 @@ MDA_MC_BLINK		equ	20h	; Enables blink attribute in alphanumeric modes
 ; VIDEO_STATUS bits
 MDA_VS_HRETRACE		equ	01h	; Horizontal drive: 1 if in horizontal retrace, else 0
 MDA_VS_BW			equ	08h	; Black-and-white video
+
+; Set DX to VIDEO_STATUS register beforehand
+MDA_HBLStart MACRO UNROLL
+	WaitBIT1 DX, HERC_VS_HRETRACE, UNROLL
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+MDA_HBLEnd MACRO UNROLL
+	WaitBIT0 DX, HERC_VS_HRETRACE, UNROLL
+ENDM

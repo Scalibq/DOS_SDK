@@ -16,6 +16,9 @@ HERC_MC_BLINK			equ	MDA_MC_BLINK
 HERC_VS_HRETRACE	equ	MDA_VS_HRETRACE
 HERC_VS_BW			equ	MDA_VS_BW
 
+HERC_HBLStart equ MDA_HBLStart
+HERC_HBLEnd equ MDA_HBLEnd
+
 ; Additional Hercules registers next to standard 6845/MDA
 ;             NOTE: Be sure that the Configuration Port (03BF) is set to your
 ;             requirements (03BF = 1 for HALF, 03BF = 3 for FULL) before
@@ -139,23 +142,13 @@ SET_HERC_TEXT	MACRO
 ENDM
 
 ; Set DX to VIDEO_STATUS register beforehand
-HERC_VBLStart MACRO
+HERC_VBLStart MACRO UNROLL
 	; Inverted flag on Hercules
-	WaitBIT0 DX, HERC_VS_VRETRACE
+	WaitBIT0 DX, HERC_VS_VRETRACE, UNROLL
 ENDM
 
 ; Set DX to VIDEO_STATUS register beforehand
-HERC_VBLEnd MACRO
+HERC_VBLEnd MACRO UNROLL
 	; Inverted flag on Hercules
-	WaitBIT1 DX, HERC_VS_VRETRACE
-ENDM
-
-; Set DX to VIDEO_STATUS register beforehand
-HERC_HBLStart MACRO
-	WaitBIT1 DX, HERC_VS_HRETRACE, 10	; Unroll 10 times, should be enough for 4.77 MHz
-ENDM
-
-; Set DX to VIDEO_STATUS register beforehand
-HERC_HBLEnd MACRO
-	WaitBIT0 DX, HERC_VS_HRETRACE, 10	; Unroll 10 times, should be enough for 4.77 MHz
+	WaitBIT1 DX, HERC_VS_VRETRACE, UNROLL
 ENDM
