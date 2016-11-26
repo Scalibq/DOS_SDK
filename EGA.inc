@@ -2,6 +2,8 @@
 ; It is compatible at the BIOS level, but not at the register level.
 ; It does not use an actual 6845, so this include file is not based on CGA or 6845.
 
+include common.inc
+
 ; EGA CRT controller
 EGA_CRTC_INDEX	equ	03D4h
 EGA_CRTC_DATA	equ	03D5h
@@ -54,6 +56,10 @@ EGA_MC_HRES			equ	10h	; Enables the high-resolution mode (640x200)
 EGA_MC_BLINK			equ	20h	; Enables blink attribute in alphanumeric modes, else intensity
 
 ; VIDEO_STATUS bits
+EGA_VS_DISP_ENABLE		equ	01h	; A 1 indicates that a regen-buffer memory access can be made without interfering with the display.
+EGA_VS_LPEN_TRIGGER		equ	02h
+EGA_VS_LPEN_SWITCH		equ	04h
+EGA_VS_VRETRACE			equ	08h
 EGA_VS_DIAGNOSTIC0		equ	10h
 EGA_VS_DIAGNOSTIC1		equ	20h
 
@@ -73,3 +79,25 @@ EGA_MO_VSYNC_POLARITY		equ	80h	; A logical 0 selects positive vertical retrace; 
 ; FEATURE_CONTROL bits
 EGA_FC_FEAT0				equ	01h	; These bits are used to ~ convey information to the feature connector.
 EGA_FC_FEAT1				equ	02h	;  The output of these bits goes to the FEAT 0 (pin 19) and FEAT 1 (pin 17) of the feature connector.
+
+; Set DX to VIDEO_STATUS register beforehand
+EGA_VBLStart MACRO UNROLL
+	WaitBIT1 DX, EGA_VS_VRETRACE, UNROLL
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+EGA_VBLEnd MACRO UNROLL
+	WaitBIT0 DX, EGA_VS_VRETRACE, UNROLL
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+EGA_HBLStart MACRO UNROLL
+	; DISPLAY_ENABLE is not exactly the same as horizontal blank, but close enough on CGA
+	WaitBIT1 DX, EGA_VS_DISP_ENABLE, UNROLL
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+EGA_HBLEnd MACRO UNROLL
+	; DISPLAY_ENABLE is not exactly the same as horizontal blank, but close enough on CGA
+	WaitBIT0 DX, EGA_VS_DISP_ENABLE, UNROLL
+ENDM

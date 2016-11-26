@@ -1,4 +1,5 @@
 include 6845.inc
+include common.inc
 
 ; CGA CRT controller
 CGA_CRTC_INDEX	equ	03D4h
@@ -29,7 +30,29 @@ CGA_MC_320x200CC	equ	%(CGA_MC_GRAPHICS)
 CGA_MC_640x200BW	equ	%(CGA_MC_GRAPHICS or CGA_MC_HRES or CGA_MC_BW)
 
 ; VIDEO_STATUS bits
-CGA_VS_DISP_ENABLE		equ	01h
+CGA_VS_DISP_ENABLE		equ	01h	; A 1 indicates that a regen-buffer memory access can be made without interfering with the display.
 CGA_VS_LPEN_TRIGGER		equ	02h
 CGA_VS_LPEN_SWITCH		equ	04h
 CGA_VS_VRETRACE			equ	08h
+
+; Set DX to VIDEO_STATUS register beforehand
+CGA_VBLStart MACRO UNROLL
+	WaitBIT1 DX, CGA_VS_VRETRACE, UNROLL
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+CGA_VBLEnd MACRO UNROLL
+	WaitBIT0 DX, CGA_VS_VRETRACE, UNROLL
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+CGA_HBLStart MACRO UNROLL
+	; DISPLAY_ENABLE is not exactly the same as horizontal blank, but close enough on CGA
+	WaitBIT1 DX, CGA_VS_DISP_ENABLE, UNROLL
+ENDM
+
+; Set DX to VIDEO_STATUS register beforehand
+CGA_HBLEnd MACRO UNROLL
+	; DISPLAY_ENABLE is not exactly the same as horizontal blank, but close enough on CGA
+	WaitBIT0 DX, CGA_VS_DISP_ENABLE, UNROLL
+ENDM
