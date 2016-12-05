@@ -2,6 +2,7 @@
 #define _8259A_H_
 
 #include "Types.h"
+#include "Common.h"
 
 #define PIC1		0x20		/* IO base address for master PIC */
 #define PIC2		0xA0		/* IO base address for slave PIC */
@@ -23,8 +24,6 @@
 #define ICW4_SFNM	0x10		/* Special fully nested (not) */
 
 #define PIC_EOI		0x20		/* End-of-interrupt command code */
-
-#define DELAY_PORT	0xEE
 
 typedef enum
 {
