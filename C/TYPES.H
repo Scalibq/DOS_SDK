@@ -19,9 +19,9 @@ typedef int bool;
 #define false 0
 #define true !false
 #endif
-typedef unsigned char byte;
-typedef unsigned short word;
-typedef unsigned long dword;
+typedef unsigned char byte, BYTE;
+typedef unsigned short word, WORD;
+typedef unsigned long dword, DWORD;
 
 #if defined(__BORLANDC__)
 typedef signed char int8_t;

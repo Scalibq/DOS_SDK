@@ -55,6 +55,8 @@
 #define CHAN2PORT		0x42
 #define CGAPITDIVRATE	19912		// (912*262) div 12
 
+#define PITFREQ		1193182l
+
 /*
 InitPIT	MACRO	channel, mode, rate
 	PORT = CHAN0PORT

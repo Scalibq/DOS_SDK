@@ -50,6 +50,8 @@ CHAN1PORT       EQU      041h
 CHAN2PORT       EQU      042h
 CGAPITDIVRATE   EQU      19912          ;(912*262) div 12
 
+PITFREQ         EQU      1193182
+
 InitPIT	MACRO	channel, mode, rate
 	PORT = CHAN0PORT
 IF (channel EQ CHAN0)
