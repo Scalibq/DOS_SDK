@@ -69,7 +69,7 @@ XT_ICW1	equ	(ICW1_INIT or ICW1_SINGLE or ICW1_ICW4)
 XT_ICW4	equ	(ICW4_8086 or ICW4_BUF_SLAVE)
 		
 	InitPIC PIC1, XT_ICW1, 08h, 0h, XT_ICW4
-	mov al, PIC_EOI
+	mov al, OCW2_EOI
 	out PIC1, al
 	sti	
 	ret
@@ -82,7 +82,7 @@ AT_ICW1	equ	(ICW1_INIT or ICW1_ICW4)
 
 	InitPIC PIC1, AT_ICW1, 08h, 04h, ICW4_8086
 	InitPIC PIC2, AT_ICW1, 070h, 02h, ICW4_8086
-	mov al, PIC_EOI
+	mov al, OCW2_EOI
 	out PIC1, al
 	out PIC2, al
 	sti
@@ -93,7 +93,7 @@ PS2_ICW1	equ	(ICW1_INIT or ICW1_LEVEL or ICW1_ICW4)
 
 	InitPIC PIC1, PS2_ICW1, 08h, 04h, ICW4_8086
 	InitPIC PIC2, PS2_ICW1, 070h, 02h, ICW4_8086
-	mov al, PIC_EOI
+	mov al, OCW2_EOI
 	out PIC1, al
 	out PIC2, al
 	sti
