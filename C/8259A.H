@@ -23,7 +23,22 @@
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM	0x10		/* Special fully nested (not) */
 
-#define PIC_EOI		0x20		/* End-of-interrupt command code */
+/* OCW1 is mapped directly to the DATA port of the PIC */
+
+/* OCW2 and OCW3 are mapped to the COMMAND port of the PIC */
+/* Bits 3 and 4 select which command word is used */
+#define OCW2	0x00
+#define OCW3	0x08
+
+#define OCW2_EOI	(OCW2 | 0x20)	/* End-of-interrupt command code */
+#define OCW2_SL		(OCW2 | 0x40)	/* Specific end-of-interrupt (interrupt specified in low 3 bits) */
+#define OCW2_R		(OCW2 | 0x80)	/* Rotate priorities */
+
+#define OCW3_RIS	(OCW3 | 0x01)	/* Read ISR (instead of IRR) */
+#define OCW3_RR		(OCW3 | 0x02)	/* Read register */
+#define OCW3_P		(OCW3 | 0x04)	/* Poll */
+#define OCW3_SMM	(OCW3 | 0x20)	/* Set special mask mode (else reset) */
+#define OCW3_ESMM	(OCW3 | 0x40)	/* Special mask mode */
 
 typedef enum
 {
