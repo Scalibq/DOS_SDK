@@ -43,9 +43,20 @@
 #define DMA1_MASK		0x0A
 #define DMA2_MASK		0xD4
 
+#define DMA_MASK_ON		0x04
+
 /* Mode registers */
 #define DMA1_MODE		0x0B
 #define DMA2_MODE		0xD6
+
+#define DMA_MODE_WRITE	0x04
+#define DMA_MODE_READ	0x08
+#define DMA_MODE_AUTO	0x10
+#define DMA_MODE_DOWN	0x20
+#define DMA_MODE_DEMAND	0x00
+#define DMA_MODE_SINGLE	0x40
+#define DMA_MODE_BLOCK	0x80
+#define DMA_MODE_CASCADE	0xC0
 
 /* Flip-flop registers */
 #define DMA1_FLIPFLOP		0x0C
