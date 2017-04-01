@@ -50,6 +50,10 @@
 #define IMFC_SET_PARAMS	0x1E3	// Set Node Parameters
 #define IMFC_REBOOT		0x1E5	// Reboot
 
+// Modes
+#define IMFC_MUSIC_MODE	0x00
+#define IMFC_THRU_MODE	0x01
+
 // Errors
 // THRU and MUSIC Mode:
 #define IMFC_ERR_OF_MS			0x1F0	// FIFO (Music Card->System) overflow error
@@ -60,6 +64,8 @@
 #define IMFC_ERR_MIDI_OFFLINE	0x1F3	// MIDI off-line error
 #define IMFC_ERR_TO_MM			0x1F4	// Time-out error (MIDI->Music Card)
 #define IMFC_ERR_TO_SM			0x1F5	// Time-out error (System->Music Card)
+
+uint8_t DetectIMFC(uint16_t base);
 
 // Actually a 9-bit value
 uint16_t ReadFromIMFC(uint16_t base);
@@ -72,5 +78,8 @@ void WriteCommandToIMFC(uint16_t base, uint8_t value);
 
 // Send 9-bit value to IMFC
 void WriteToIMFC(uint16_t base, uint16_t value);
+
+// Initialize the music card in either MUSIC or THRU mode
+void InitIMFC(uint16_t base, uint8_t mode);
 
 #endif /* _IMFC_H_ */
