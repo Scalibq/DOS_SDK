@@ -81,7 +81,7 @@ FF <type> <length> <bytes>
 */
 
 // Midi channel status byte
-enum
+typedef enum
 {
 	NOTE_OFF = 0x80,
 	NOTE_ON = 0x90,

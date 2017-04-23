@@ -45,6 +45,7 @@ uint16_t ReadFromIMFC(uint16_t base)
 	
 	// Now read the low 8-bit data from PIU0
 	value |= inp(base + PIU0);
+	
 	return value;
 }
 
