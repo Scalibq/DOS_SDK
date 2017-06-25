@@ -57,7 +57,7 @@
 // Errors
 // THRU and MUSIC Mode:
 #define IMFC_ERR_OF_MS			0x1F0	// FIFO (Music Card->System) overflow error
-#define IMFC_ERR_OF_MM		0	x1F1	// FIFO (MIDI->Music Card) overflow error
+#define IMFC_ERR_OF_MM			0x1F1	// FIFO (MIDI->Music Card) overflow error
 #define IMFC_ERR_MIDI_RECV		0x1F2	// MIDI Reception error
 
 // MUSIC Mode Only:
