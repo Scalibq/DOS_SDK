@@ -33,6 +33,7 @@ GetCmdLine	PROC
 	jmp		@@doScan
 	
 @@endScan:
+	mov		[bx], di				; Store the last pointer as well, so lengths can be calculated for all arguments
 	ret
 GetCmdLine	ENDP
 
