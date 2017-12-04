@@ -21,7 +21,7 @@ GetCmdLine	PROC
 	lea		bx, [si][CMDLINE.argv]
 
 	test	cx, cx
-	jz		@@endScan
+	jz		@@end
 	
 @@doScan:
 	repne	scasb
@@ -33,7 +33,9 @@ GetCmdLine	PROC
 	jmp		@@doScan
 	
 @@endScan:
+	inc		di
 	mov		[bx], di				; Store the last pointer as well, so lengths can be calculated for all arguments
+@@end:
 	ret
 GetCmdLine	ENDP
 
