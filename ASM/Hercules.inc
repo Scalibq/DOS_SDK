@@ -141,13 +141,13 @@ SET_HERC_TEXT	MACRO
 	out dx, al
 ENDM
 
-; Set DX to VIDEO_STATUS register beforehand
+; Set DX to HERC_VIDEO_STATUS register beforehand
 HERC_VBLStart MACRO UNROLL
 	; Inverted flag on Hercules
 	WaitBIT0 DX, HERC_VS_VRETRACE, UNROLL
 ENDM
 
-; Set DX to VIDEO_STATUS register beforehand
+; Set DX to HERC_VIDEO_STATUS register beforehand
 HERC_VBLEnd MACRO UNROLL
 	; Inverted flag on Hercules
 	WaitBIT1 DX, HERC_VS_VRETRACE, UNROLL

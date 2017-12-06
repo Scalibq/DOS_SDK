@@ -13,7 +13,7 @@ EGA_VIDEO_STATUS	equ	03DAh
 ; Additional EGA registers
 EGA_MISC_OUTPUT 	equ	03C2h
 EGA_FEATURE_CONTROL	equ	03DAh
-EGA_INPUT_STATUS0	equ	VIDEO_STATUS
+EGA_INPUT_STATUS0	equ	EGA_VIDEO_STATUS
 EGA_INPUT_STATUS1	equ	03DAh
 
 ; EGA CRTC registers
@@ -80,23 +80,23 @@ EGA_MO_VSYNC_POLARITY		equ	80h	; A logical 0 selects positive vertical retrace; 
 EGA_FC_FEAT0				equ	01h	; These bits are used to ~ convey information to the feature connector.
 EGA_FC_FEAT1				equ	02h	;  The output of these bits goes to the FEAT 0 (pin 19) and FEAT 1 (pin 17) of the feature connector.
 
-; Set DX to VIDEO_STATUS register beforehand
+; Set DX to EGA_VIDEO_STATUS register beforehand
 EGA_VBLStart MACRO UNROLL
 	WaitBIT1 DX, EGA_VS_VRETRACE, UNROLL
 ENDM
 
-; Set DX to VIDEO_STATUS register beforehand
+; Set DX to EGA_VIDEO_STATUS register beforehand
 EGA_VBLEnd MACRO UNROLL
 	WaitBIT0 DX, EGA_VS_VRETRACE, UNROLL
 ENDM
 
-; Set DX to VIDEO_STATUS register beforehand
+; Set DX to EGA_VIDEO_STATUS register beforehand
 EGA_HBLStart MACRO UNROLL
 	; DISPLAY_ENABLE is not exactly the same as horizontal blank, but close enough on CGA
 	WaitBIT1 DX, EGA_VS_DISP_ENABLE, UNROLL
 ENDM
 
-; Set DX to VIDEO_STATUS register beforehand
+; Set DX to EGA_VIDEO_STATUS register beforehand
 EGA_HBLEnd MACRO UNROLL
 	; DISPLAY_ENABLE is not exactly the same as horizontal blank, but close enough on CGA
 	WaitBIT0 DX, EGA_VS_DISP_ENABLE, UNROLL
