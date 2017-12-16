@@ -3,6 +3,12 @@
 
 uint8_t DetectIMFC(uint16_t base)
 {
+	// Initialize PIU
+	outp(base + PCR, PCR_INIT);
+	
+	// Set the IMFC to COMMAND mode
+	outp(base + TCR, TCR_EXT8);
+	
 	// Send a value to see if it will 'stick'
 	outp(base + PIU1, 0xFF);
 	
@@ -18,7 +24,7 @@ uint8_t DetectIMFC(uint16_t base)
 	
 	// Read PIU0 to delay
 	inp(base + PIU0);
-	
+
 	// Check if the value 'stuck'
 	if (inp(base + PIU1) != 0)
 		return 0;
