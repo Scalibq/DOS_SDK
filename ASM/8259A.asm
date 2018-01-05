@@ -63,7 +63,6 @@ GetMachineType PROC
 	out PIC2_DATA, al	; Restore mask
 	jnz @@noCascade
 
-
 	mov cl, MACHINE_PCAT
 	
 @@noCascade:

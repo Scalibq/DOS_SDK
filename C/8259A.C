@@ -16,7 +16,46 @@ MachineType GetMachineType(void)
 #if defined(__BORLANDC__)
 	_asm {
 		mov [machineType], MACHINE_PCXT
+		
+		push es
 
+		// Get BIOS configuration
+		mov ah, 0xC0
+		int 0x15
+		jc notSupported
+
+		mov al, es:[bx+5]	// Get feature byte 1
+		test al, 0x40		// Do we have a second 8259A?
+		jz exit
+
+		mov [machineType], MACHINE_PCAT
+
+		test al, 0x3		// Do we have MCA bus?
+		jz exit
+
+		mov [machineType], MACHINE_PS2
+		jmp exit
+	}
+notSupported:;
+	_asm {
+		// First try to test for known machine byte
+		mov ax, 0xF000
+		mov es, ax
+		mov al, es:[0xFFFE]
+	
+		// Is it a PC, XT or PCjr (FF, FE and FD respectively)
+		cmp al, 0xFD
+		jae exit
+	
+		// Is it an AT?
+		cmp al, 0xFC
+		jne unknownMachineType
+	
+		mov [machineType], MACHINE_PCAT
+		jmp exit
+	}
+unknownMachineType:;
+	_asm {
 		cli
 
 		// First check for physical second PIC
@@ -28,37 +67,17 @@ MachineType GetMachineType(void)
 		in al, PIC2_DATA
 		xor al, bl	// If writing worked, we expect al to be 0xFF
 		inc al		// Set zero flag on 0xFF
-		jnz noCascade
-
 		mov al, bl
 		out PIC2_DATA, al	// Restore mask
-
-		sti
+		jnz noCascade
 
 		mov [machineType], MACHINE_PCAT
 	}
 noCascade:;
 	_asm {
-		push es
-
-		// Get BIOS configuration
-		mov ah, 0xC0
-		int 0x15
-		jc notSupported
-
-		mov al, es:[bx+5]	// Get feature byte 1
-		test al, 0x40		// Do we have a second 8259A?
-		jz notSupported
-
-		mov [machineType], MACHINE_PCAT
-
-		test al, 0x3		// Do we have MCA bus?
-		jz notSupported
-
-		mov [machineType], MACHINE_PS2
-
+		sti
 	}
-notSupported:;
+exit:;
 	_asm {
 		pop es
 	}
@@ -67,7 +86,44 @@ notSupported:;
 #if defined(__WATCOMC__)
 	_asm {
 		mov [machineType], 0//MACHINE_PCXT
+		
+		push es
 
+		// Get BIOS configuration
+		mov ah, 0xC0
+		int 0x15
+		jc notSupported
+
+		mov al, es:[bx+5]	// Get feature byte 1
+		test al, 0x40		// Do we have a second 8259A?
+		jz exit
+
+		mov [machineType], 1//MACHINE_PCAT
+
+		test al, 0x3		// Do we have MCA bus?
+		jz exit
+
+		mov [machineType], 2//MACHINE_PS2
+		jmp exit
+		
+notSupported:
+		// First try to test for known machine byte
+		mov ax, 0xF000
+		mov es, ax
+		mov al, es:[0xFFFE]
+	
+		// Is it a PC, XT or PCjr (FF, FE and FD respectively)
+		cmp al, 0xFD
+		jae exit
+	
+		// Is it an AT?
+		cmp al, 0xFC
+		jne unknownMachineType
+	
+		mov [machineType], 1//MACHINE_PCAT
+		jmp exit
+	
+unknownMachineType:
 		cli
 
 		// First check for physical second PIC
@@ -79,33 +135,16 @@ notSupported:;
 		in al, PIC2_DATA
 		xor al, bl	// If writing worked, we expect al to be 0xFF
 		inc al		// Set zero flag on 0xFF
-		jnz noCascade
-
 		mov al, bl
 		out PIC2_DATA, al	// Restore mask
-
-		sti
+		jnz noCascade
 
 		mov [machineType], 1//MACHINE_PCAT
+		
 noCascade:
-		push es
-
-		// Get BIOS configuration
-		mov ah, 0xC0
-		int 0x15
-		jc notSupported
-
-		mov al, es:[bx+5]	// Get feature byte 1
-		test al, 0x40		// Do we have a second 8259A?
-		jz notSupported
-
-		mov [machineType], 1//MACHINE_PCAT
-
-		test al, 0x3		// Do we have MCA bus?
-		jz notSupported
-
-		mov [machineType], 2//MACHINE_PS2
-notSupported:
+		sti
+		
+exit:
 		pop es
 	}
 #endif
