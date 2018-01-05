@@ -59,10 +59,10 @@ GetMachineType PROC
 	in al, PIC2_DATA
 	xor al, bl	; If writing worked, we expect al to be 0FFh
 	inc al		; Set zero flag on 0FFh
-	jnz @@noCascade
-
 	mov al, bl
 	out PIC2_DATA, al	; Restore mask
+	jnz @@noCascade
+
 
 	mov cl, MACHINE_PCAT
 	
