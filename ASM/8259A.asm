@@ -36,17 +36,9 @@ GetMachineType PROC
 	mov es, ax
 	mov al, es:[0FFFEh]
 	
-	; Is it a PC?
-	cmp al, 0FFh
-	je @@exit
-	
-	; Is it an XT?
-	cmp al, 0FEh
-	je @@exit
-	
-	; Is it a PCjr?
+	; Is it a PC, XT or PCjr (FF, FE and FD respectively)
 	cmp al, 0FDh
-	je @@exit
+	jae @@exit
 	
 	; Is it an AT?
 	cmp al, 0FCh
