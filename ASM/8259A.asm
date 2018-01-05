@@ -31,6 +31,31 @@ GetMachineType PROC
 	jmp @@exit
 	
 @@notSupported:
+	; First try to test for known machine byte
+	mov ax, 0F000h
+	mov es, ax
+	mov al, es:[0FFFEh]
+	
+	; Is it a PC?
+	cmp al, 0FFh
+	je @@exit
+	
+	; Is it an XT?
+	cmp al, 0FEh
+	je @@exit
+	
+	; Is it a PCjr?
+	cmp al, 0FDh
+	je @@exit
+	
+	; Is it an AT?
+	cmp al, 0FCh
+	jne @@unknownMachineType
+	
+	mov cl, MACHINE_PCAT
+	jmp @@exit
+	
+@@unknownMachineType:
 	cli
 
 	; First check for physical second PIC
