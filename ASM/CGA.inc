@@ -21,13 +21,13 @@ CGA_MC_HRES			equ	10h	; Enables the high-resolution mode (640x200)
 CGA_MC_BLINK		equ	20h	; Enables blink attribute in alphanumeric modes, else intensity
 
 ; Default CGA modes - combine with CGA_MC_VIDEO_ENABLE to enable the display
-CGA_MC_40x25BW		equ	%(CGA_MC_BW or CGA_MC_BLINK)
-CGA_MC_40x25C		equ	%(CGA_MC_BLINK)
-CGA_MC_80x25BW		equ	%(CGA_MC_80C or CGA_MC_BW or CGA_MC_BLINK)
-CGA_MC_80x25C		equ	%(CGA_MC_80C or CGA_MC_BLINK)
-CGA_MC_320x200BW	equ	%(CGA_MC_GRAPHICS or CGA_MC_BW)
-CGA_MC_320x200CC	equ	%(CGA_MC_GRAPHICS)
-CGA_MC_640x200BW	equ	%(CGA_MC_GRAPHICS or CGA_MC_HRES or CGA_MC_BW)
+CGA_MC_40x25BW		equ	(CGA_MC_BW or CGA_MC_BLINK)
+CGA_MC_40x25C		equ	(CGA_MC_BLINK)
+CGA_MC_80x25BW		equ	(CGA_MC_80C or CGA_MC_BW or CGA_MC_BLINK)
+CGA_MC_80x25C		equ	(CGA_MC_80C or CGA_MC_BLINK)
+CGA_MC_320x200BW	equ	(CGA_MC_GRAPHICS or CGA_MC_BW)
+CGA_MC_320x200CC	equ	(CGA_MC_GRAPHICS)
+CGA_MC_640x200BW	equ	(CGA_MC_GRAPHICS or CGA_MC_HRES or CGA_MC_BW)
 
 ; VIDEO_STATUS bits
 CGA_VS_DISP_ENABLE		equ	01h	; A 1 indicates that a regen-buffer memory access can be made without interfering with the display.

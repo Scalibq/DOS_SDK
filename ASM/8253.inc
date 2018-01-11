@@ -1,3 +1,5 @@
+include common.inc
+
 ;The Mode/Command register at I/O address 43h is defined as follows:
 ;
 ;       7 6 5 4 3 2 1 0
