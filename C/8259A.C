@@ -22,21 +22,21 @@ MachineType GetMachineType(void)
 		// Get BIOS configuration
 		mov ah, 0xC0
 		int 0x15
-		jc notSupported
+		jc @@notSupported
 
 		mov al, es:[bx+5]	// Get feature byte 1
 		test al, 0x40		// Do we have a second 8259A?
-		jz exit
+		jz @@exit
 
 		mov [machineType], MACHINE_PCAT
 
 		test al, 0x3		// Do we have MCA bus?
-		jz exit
+		jz @@exit
 
 		mov [machineType], MACHINE_PS2
-		jmp exit
+		jmp @@exit
 	}
-notSupported:;
+@@notSupported:;
 	_asm {
 		// First try to test for known machine byte
 		mov ax, 0xF000
@@ -45,16 +45,16 @@ notSupported:;
 	
 		// Is it a PC, XT or PCjr (FF, FE and FD respectively)
 		cmp al, 0xFD
-		jae exit
+		jae @@exit
 	
 		// Is it an AT?
 		cmp al, 0xFC
 		jne unknownMachineType
 	
 		mov [machineType], MACHINE_PCAT
-		jmp exit
+		jmp @@exit
 	}
-unknownMachineType:;
+@@unknownMachineType:;
 	_asm {
 		cli
 
@@ -69,15 +69,15 @@ unknownMachineType:;
 		inc al		// Set zero flag on 0xFF
 		mov al, bl
 		out PIC2_DATA, al	// Restore mask
-		jnz noCascade
+		jnz @@noCascade
 
 		mov [machineType], MACHINE_PCAT
 	}
-noCascade:;
+@@noCascade:;
 	_asm {
 		sti
 	}
-exit:;
+@@exit:;
 	_asm {
 		pop es
 	}
@@ -92,21 +92,21 @@ exit:;
 		// Get BIOS configuration
 		mov ah, 0xC0
 		int 0x15
-		jc notSupported
+		jc @@notSupported
 
 		mov al, es:[bx+5]	// Get feature byte 1
 		test al, 0x40		// Do we have a second 8259A?
-		jz exit
+		jz @@exit
 
 		mov [machineType], 1//MACHINE_PCAT
 
 		test al, 0x3		// Do we have MCA bus?
-		jz exit
+		jz @@exit
 
 		mov [machineType], 2//MACHINE_PS2
-		jmp exit
+		jmp @@exit
 		
-notSupported:
+@@notSupported:
 		// First try to test for known machine byte
 		mov ax, 0xF000
 		mov es, ax
@@ -114,16 +114,16 @@ notSupported:
 	
 		// Is it a PC, XT or PCjr (FF, FE and FD respectively)
 		cmp al, 0xFD
-		jae exit
-	
+		jae @@exit
+		
 		// Is it an AT?
 		cmp al, 0xFC
-		jne unknownMachineType
+		jne @@unknownMachineType
 	
 		mov [machineType], 1//MACHINE_PCAT
-		jmp exit
+		jmp @@exit
 	
-unknownMachineType:
+@@unknownMachineType:
 		cli
 
 		// First check for physical second PIC
@@ -137,14 +137,14 @@ unknownMachineType:
 		inc al		// Set zero flag on 0xFF
 		mov al, bl
 		out PIC2_DATA, al	// Restore mask
-		jnz noCascade
+		jnz @@noCascade
 
 		mov [machineType], 1//MACHINE_PCAT
 		
-noCascade:
+@@noCascade:
 		sti
 		
-exit:
+@@exit:
 		pop es
 	}
 #endif
