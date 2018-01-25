@@ -44,11 +44,15 @@
 #define TSR_TCS	0x80	// Total card IRQ
 
 // Commands
-#define IMFC_MODE		0x1E0	// Select Music Card Mode
-#define IMFC_ERROR_MODE	0x1E1	// Select Error Report Mode
-#define IMFC_SET_PATH	0x1E2	// Set Path
-#define IMFC_SET_PARAMS	0x1E3	// Set Node Parameters
-#define IMFC_REBOOT		0x1E5	// Reboot
+#define IMFC_MODE			0x1E0	// Select Music Card Mode
+#define IMFC_ERROR_MODE		0x1E1	// Select Error Report Mode
+#define IMFC_SET_PATH		0x1E2	// Set Path
+#define IMFC_SET_PARAMS		0x1E3	// Set Node Parameters
+#define IMFC_REBOOT			0x1E5	// Reboot
+#define IMFC_GET_MODE		0x1D0	// Card mode status
+#define IMFC_GET_ERROR_MODE	0x1D1	// Error report mode status
+#define IMFC_GET_PATH		0x1D2	// Path setting
+#define IMFC_GET_PARAMS		0x1D3	// Node parameter setting
 
 // Modes
 #define IMFC_MUSIC_MODE	0x00
