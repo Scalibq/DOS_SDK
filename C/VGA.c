@@ -2,6 +2,61 @@
 #include <conio.h>
 #include "VGA.h"
 #include "Common.h"
+#include "malloc.h"
+#include "string.h"
+
+typedef uint8_t byte;
+typedef uint16_t word;
+typedef uint32_t dword;
+
+typedef struct DPMI_SXrminfo {		// Real mode registers for the DPMI
+    dword EDI;                      // translation API.
+    dword ESI;                      // 32 bit registers.
+    dword EBP;
+    dword _reserved;
+    dword EBX;
+    dword EDX;
+    dword ECX;
+    dword EAX;
+    word  flags;
+    word  ES, DS, FS, GS;
+    word  IP, CS, SP, SS;
+} DPMI_TXRealModeInfo;
+
+typedef struct DPMI_SWrminfo {      // Real mode registers for the DPMI
+    word DI, HDI;                   // translation API.
+    word SI, HSI;                   // 16 bit registers.
+    word BP, HBP;
+    dword _reserved;
+    word BX, HBX;
+    word DX, HDX;
+    word CX, HCX;
+    word AX, HAX;
+    word flags;
+    word ES, DS, FS, GS;
+    word IP, CS, SP, SS;
+} DPMI_TWRealModeInfo;
+
+typedef struct DPMI_SBrminfo {		// Real mode registers for the DPMI
+    word DI, HDI;                   // translation API.
+    word SI, HSI;                   // 8 bit registers
+    word BP, HBP;
+    dword _reserved;
+    byte BL, BH, HBL, HBH;
+    byte DL, DH, HDL, HDH;
+    byte CL, CH, HCL, HCH;
+    byte AL, AH, HAL, HAH;
+    byte flagsl, flagsh;
+    word ES, DS, FS, GS;
+    word IP, CS, SP, SS;
+} DPMI_TBRealModeInfo;
+
+typedef union DPMI_Urminfo {	// Real mode registers for the DPMI
+								// translation API.
+    DPMI_TBRealModeInfo b;
+    DPMI_TWRealModeInfo w;
+    DPMI_TXRealModeInfo x;
+} DPMI_TRealModeInfo;
 
 // Index/data pairs for CRT Controller registers that differ between
 // mode 13h and mode X.
@@ -20,6 +75,8 @@ uint16_t CRTParms[] = {
 
 void SetVideoMode(uint8_t mode)
 {
+	union REGPACK regs;
+
 #if defined(M_I386)
 	_asm
 	{
@@ -27,9 +84,19 @@ void SetVideoMode(uint8_t mode)
 		mov al, [mode]
 		int 0x10
 	}
+#if 0
+	DPMI_TRealModeInfo dblock = {0};
+	
+	dblock.x.EAX = mode;
+	regs.w.ax = 0x300;	/* DPMI Simulate R-M intr */
+	regs.h.bl = 0x10;	/* VGA BIOS call */
+	regs.h.bh = 0; /* flags */
+	regs.w.cx = 0; /* # bytes from stack */
+	regs.x.edi = FP_OFF( &dblock );
+	regs.x.es = FP_SEG( &dblock );
+	intr( 0x31, &regs );
+#endif
 #else	
-	union REGPACK regs;
-
 	regs.x.ax = mode;
 	intr(0x10, &regs);
 #endif
