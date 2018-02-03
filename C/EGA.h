@@ -15,6 +15,7 @@
 
 // Additional EGA registers
 #define EGA_MISC_OUTPUT 	0x3C2
+#define EGA_SC_INDEX		0x3C4
 #define EGA_FEATURE_CONTROL	0x3DA
 #define EGA_INPUT_STATUS0	EGA_VIDEO_STATUS
 #define EGA_INPUT_STATUS1	0x3DA

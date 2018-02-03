@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define _countof(x)	(sizeof(x)/sizeof(x[0]))
+
 #define	PPIPORTB	0x61
 #define	DELAY_PORT	0xEE
 
