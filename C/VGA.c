@@ -20,10 +20,19 @@ uint16_t CRTParms[] = {
 
 void SetVideoMode(uint8_t mode)
 {
+#if defined(M_I386)
+	_asm
+	{
+		xor ax, ax
+		mov al, [mode]
+		int 0x10
+	}
+#else	
 	union REGPACK regs;
-	
+
 	regs.x.ax = mode;
 	intr(0x10, &regs);
+#endif
 }
 
 void Set320x240Mode(void)
