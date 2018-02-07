@@ -16,9 +16,18 @@
 // Additional EGA registers
 #define EGA_MISC_OUTPUT 	0x3C2
 #define EGA_SC_INDEX		0x3C4
+#define	EGA_SC_DATA			0x3C5
 #define EGA_FEATURE_CONTROL	0x3DA
 #define EGA_INPUT_STATUS0	EGA_VIDEO_STATUS
 #define EGA_INPUT_STATUS1	0x3DA
+
+/* EGA attribute controller */
+#define EGA_AC_INDEX	0x03C0
+#define EGA_AC_DATA		0x03C0
+
+/* EGA graphics controller */
+#define EGA_GC_INDEX	0x03CE
+#define EGA_GC_DATA		0x03CF
 
 // EGA CRTC registers
 //	equ	00h	;	Horizontal Total
@@ -83,6 +92,8 @@
 // FEATURE_CONTROL bits
 #define EGA_FC_FEAT0				0x01	// These bits are used to ~ convey information to the feature connector.
 #define EGA_FC_FEAT1				0x02	// The output of these bits goes to the FEAT 0 (pin 19) and FEAT 1 (pin 17) of the feature connector.
+
+#define EGA_MAP_MASK		0x02
 
 #define EGA_VBLStart()	WaitBIT1(EGA_VIDEO_STATUS, EGA_VS_VRETRACE)
 #define EGA_VBLEnd()	WaitBIT0(EGA_VIDEO_STATUS, EGA_VS_VRETRACE)
