@@ -10,6 +10,7 @@
 #define halloc malloc
 #define hfree free
 #define _farfread fread
+#define _fmemcpy memcpy
 
 #define near
 #define far
