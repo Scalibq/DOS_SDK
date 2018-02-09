@@ -20,6 +20,7 @@ void WaitBIT1(int IOREG, uint8_t FLAG)
 	while (!(inp(IOREG) & FLAG));
 }
 
+#if !defined(M_I386)
 void far* farmalloc(unsigned long size)
 {
 	// Round to next paragraph
@@ -32,6 +33,7 @@ void farfree(void far* pBuf)
 {
 	hfree(pBuf);
 }
+#endif
 
 #define FILEBUFSIZE 1024
 
