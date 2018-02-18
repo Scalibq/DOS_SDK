@@ -13,11 +13,9 @@ OPL2LPT is wired up to the following pins
  7: D5      <->  Data5
  8: D6      <->  Data6
  9: D7      <->  Data7
-10: /RESET   -   Ack
-14: /CS      ->  /Linefeed CTRL-1
-15: IRQ     <-   Error     Status-3
+14: /RD      ->  /Linefeed CTRL-1
 16: /WR      ->  Init      CTRL-2
-17: /RD      ->  /Select   CTRL-3
+17: A1       ->  /Select   CTRL-3
 */
 
 void WriteOPL2LPTAddr(uint16_t base, uint8_t val)
@@ -25,16 +23,16 @@ void WriteOPL2LPTAddr(uint16_t base, uint8_t val)
 	uint8_t i;
 	volatile uint8_t delay;
 	
-	// Set A0 = 1
+	// Set A0 = 0
 	
 	// Toggle /WR
-	outp( base + 2, PP_NOT_AUTOFD );
+	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE );
 
 	// Set data
 	outp( base, val);
-
-	outp( base + 2, PP_NOT_AUTOFD | PP_INIT );
 	
+	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT );
+
 	// Delay for 3.3 microsecs
 	for (i = 0; i < 6; i++)
 	{
@@ -47,15 +45,15 @@ void WriteOPL2LPTData(uint16_t base, uint8_t val)
 	uint8_t i;
 	volatile uint8_t delay;
 	
-	// Set A0 = 0
+	// Set A0 = 1
 
 	// Toggle /WR
-	outp( base + 2, PP_NOT_STROBE | PP_NOT_AUTOFD );
+	outp( base + 2, PP_NOT_SELECT );
 
 	// Set data
 	outp( base, val );
 
-	outp( base + 2, PP_NOT_STROBE | PP_NOT_AUTOFD | PP_INIT );
+	outp( base + 2, PP_NOT_SELECT | PP_INIT );
 	
 	// Delay for 23 microsecs
 	for (i = 0; i < 35; i++)
