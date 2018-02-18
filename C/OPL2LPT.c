@@ -58,6 +58,6 @@ void WriteOPL2LPTData(uint16_t base, uint8_t val)
 	// Delay for 23 microsecs
 	for (i = 0; i < 35; i++)
 	{
-		delay = inp( base + 2 );
+		delay = inp(base);
 	}
 }

@@ -100,6 +100,6 @@ void WriteDBS2PData(uint16_t base, uint8_t val)
 	// Delay for 3.5 microsecs
 	for (i = 0; i < 6; i++)
 	{
-		delay = inp( base + 2 );
+		delay = inp(base);
 	}
 }
