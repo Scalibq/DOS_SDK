@@ -19,6 +19,10 @@ WriteOPL2LPTAddr MACRO base, val
 	
 	; Toggle /WR
 	mov dx, base +2
+
+	mov al, (PP_NOT_SELECT or PP_NOT_STROBE or PP_INIT)
+	out dx, al
+
 	mov al, (PP_NOT_SELECT or PP_NOT_STROBE)
 	out dx, al
 
@@ -44,6 +48,10 @@ WriteOPL2LPTData MACRO base, val
 	
 	; Toggle /WR
 	mov dx, base +2
+
+	mov al, (PP_NOT_SELECT or PP_INIT)
+	out dx, al
+
 	mov al, (PP_NOT_SELECT)
 	out dx, al
 
