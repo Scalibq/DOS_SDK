@@ -26,6 +26,7 @@ void WriteOPL2LPTAddr(uint16_t base, uint8_t val)
 	// Set A0 = 0
 	
 	// Toggle /WR
+	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT );
 	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE );
 
 	// Set data
@@ -48,6 +49,7 @@ void WriteOPL2LPTData(uint16_t base, uint8_t val)
 	// Set A0 = 1
 
 	// Toggle /WR
+	outp( base + 2, PP_NOT_SELECT | PP_INIT );
 	outp( base + 2, PP_NOT_SELECT );
 
 	// Set data
