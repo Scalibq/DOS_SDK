@@ -35,7 +35,7 @@ ReadDBS2PStatus MACRO base
 	ENDM
 ENDM
 
-ReadDBS2PStatus MACRO base
+ReadDBS2PData MACRO base
 	; Set A0 = 0
 
 	; Toggle /RD
@@ -58,7 +58,7 @@ WriteDBS2PCtrl MACRO base, val
 	; Set A0 = 1
 	
 	; Toggle /WR
-	mov dx, base +2
+	mov dx, base + 2
 	mov al, (PP_NOT_AUTOFD)
 	out dx, al
 
@@ -79,11 +79,11 @@ WriteDBS2PCtrl MACRO base, val
 	ENDM
 ENDM
 
-WriteDBS2PCtrl MACRO base, val
+WriteDBS2PData MACRO base, val
 	; Set A0 = 0
 	
 	; Toggle /WR
-	mov dx, base +2
+	mov dx, base + 2
 	mov al, (PP_NOT_STROBE or PP_NOT_AUTOFD)
 	out dx, al
 
