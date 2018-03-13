@@ -23,9 +23,6 @@ WriteOPL2LPTAddr MACRO base, val
 	mov al, (PP_NOT_SELECT or PP_NOT_STROBE or PP_INIT)
 	out dx, al
 
-	mov al, (PP_NOT_SELECT or PP_NOT_STROBE)
-	out dx, al
-
 	; Set data
 	dec dx
 	dec dx
@@ -34,7 +31,7 @@ WriteOPL2LPTAddr MACRO base, val
 	
 	inc dx
 	inc dx
-	mov al, (PP_NOT_SELECT or PP_NOT_STROBE or PP_INIT)
+	mov al, (PP_NOT_SELECT or PP_NOT_STROBE)
 	out dx, al
 		
 	; Delay for 3.3 microsecs
@@ -52,9 +49,6 @@ WriteOPL2LPTData MACRO base, val
 	mov al, (PP_NOT_SELECT or PP_INIT)
 	out dx, al
 
-	mov al, (PP_NOT_SELECT)
-	out dx, al
-
 	; Set data
 	dec dx
 	dec dx
@@ -63,7 +57,7 @@ WriteOPL2LPTData MACRO base, val
 	
 	inc dx
 	inc dx
-	mov al, (PP_NOT_SELECT or PP_INIT)
+	mov al, (PP_NOT_SELECT)
 	out dx, al
 		
 	; Delay for 23 microsecs

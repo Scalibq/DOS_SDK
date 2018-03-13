@@ -27,12 +27,11 @@ void WriteOPL2LPTAddr(uint16_t base, uint8_t val)
 	
 	// Toggle /WR
 	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT );
-	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE );
 
 	// Set data
 	outp( base, val);
 	
-	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT );
+	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE );
 
 	// Delay for 3.3 microsecs
 	for (i = 0; i < 6; i++)
@@ -50,12 +49,11 @@ void WriteOPL2LPTData(uint16_t base, uint8_t val)
 
 	// Toggle /WR
 	outp( base + 2, PP_NOT_SELECT | PP_INIT );
-	outp( base + 2, PP_NOT_SELECT );
 
 	// Set data
 	outp( base, val );
 
-	outp( base + 2, PP_NOT_SELECT | PP_INIT );
+	outp( base + 2, PP_NOT_SELECT );
 	
 	// Delay for 23 microsecs
 	for (i = 0; i < 35; i++)
