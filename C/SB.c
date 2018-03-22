@@ -4,13 +4,6 @@
 #include <stdio.h>
 #include "SB.h"
 
-// Relative offsets to base address
-#define SB_RESET	0x06
-#define SB_READ		0x0A
-#define SB_WRITE	0x0C
-#define SB_WRITE_STATUS	SB_WRITE
-#define SB_READ_STATUS	0x0E
-
 uint8_t GetBlasterSetting(SBConfig* pSBConfig)
 {
 	char *pBase, *pIrq, *pDma, *pType;
