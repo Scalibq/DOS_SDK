@@ -16,14 +16,40 @@ include LPT.inc
 ; 16: /WR      ->  Init      CTRL-2
 ; 17: /RD      ->  /Select   CTRL-3
 
+ReadDBS2PStatusReg MACRO
+	; Set A0 = 1
+
+	; Toggle /RD
+	mov al, (PP_NOT_AUTOFD or PP_INIT or PP_NOT_SELECT)
+	out dx, al
+	mov al, (PP_NOT_AUTOFD or PP_INIT)
+	out dx, al
+	
+	dec dx
+	dec dx
+	
+	; Delay for 3.5 microsecs
+	REPT 6
+		in al, dx
+	ENDM
+ENDM
+
 ReadDBS2PStatus MACRO base
 	; Set A0 = 1
 
 	; Toggle /RD
 	mov dx, base + 2
-	mov al, (PP_NOT_AUTOFD or PP_INIT or PP_NOT_SELECT)
+	
+	ReadDBS2PStatusReg
+ENDM
+
+ReadDBS2PDataReg MACRO
+	; Set A0 = 0
+
+	; Toggle /RD
+	mov al, (PP_NOT_STROBE or PP_NOT_AUTOFD or PP_INIT or PP_NOT_SELECT)
 	out dx, al
-	mov al, (PP_NOT_AUTOFD or PP_INIT)
+	mov al, (PP_NOT_STROBE or PP_NOT_AUTOFD or PP_INIT)
 	out dx, al
 	
 	dec dx
@@ -40,25 +66,13 @@ ReadDBS2PData MACRO base
 
 	; Toggle /RD
 	mov dx, base + 2
-	mov al, (PP_NOT_STROBE or PP_NOT_AUTOFD or PP_INIT or PP_NOT_SELECT)
-	out dx, al
-	mov al, (PP_NOT_STROBE or PP_NOT_AUTOFD or PP_INIT)
-	out dx, al
-	
-	dec dx
-	dec dx
-	
-	; Delay for 3.5 microsecs
-	REPT 6
-		in al, dx
-	ENDM
+	ReadDBS2PDataReg
 ENDM
 
-WriteDBS2PCtrl MACRO base, val
+WriteDBS2PCtrlReg MACRO val
 	; Set A0 = 1
 	
 	; Toggle /WR
-	mov dx, base + 2
 	mov al, (PP_NOT_AUTOFD)
 	out dx, al
 
@@ -79,11 +93,19 @@ WriteDBS2PCtrl MACRO base, val
 	ENDM
 ENDM
 
-WriteDBS2PData MACRO base, val
-	; Set A0 = 0
+WriteDBS2PCtrl MACRO base, val
+	; Set A0 = 1
 	
 	; Toggle /WR
 	mov dx, base + 2
+	
+	WriteDBS2PCtrlReg val
+ENDM
+
+WriteDBS2PDataReg MACRO val
+	; Set A0 = 0
+	
+	; Toggle /WR
 	mov al, (PP_NOT_STROBE or PP_NOT_AUTOFD)
 	out dx, al
 
@@ -102,4 +124,13 @@ WriteDBS2PData MACRO base, val
 	REPT 6
 		in al, dx
 	ENDM
+ENDM
+
+WriteDBS2PData MACRO base, val
+	; Set A0 = 0
+	
+	; Toggle /WR
+	mov dx, base + 2
+	
+	WriteDBS2PDataReg val
 ENDM
