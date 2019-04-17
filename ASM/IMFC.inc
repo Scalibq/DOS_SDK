@@ -80,3 +80,55 @@ IMFC_ERR_TO_SM			equ	01F5h	; Time-out error (System->Music Card)
 
 ; Initialize the music card in either MUSIC or THRU mode
 ;void InitIMFC(uint16_t base, uint8_t mode);
+
+; Set DX to IMFC base address beforehand, and al to the value to write
+WriteToIMFC MACRO value
+	LOCAL @@waitLoop
+
+	; Wait for card to become ready to write
+	; Select PIU2 register
+	inc dl
+	inc dl
+
+@@waitLoop:
+	in al, dx
+	test al, PIU2_TxRDY
+	jz @@waitLoop
+	
+	; Now output data to PIU1
+	dec dl
+	mov al, value
+	out dx, al
+	
+	; Reset DX back to original value
+	dec dl	
+ENDM
+
+; Set DX to IMFC base address beforehand, and al to the value to write
+WriteCommandToIMFC MACRO value
+	LOCAL @@waitLoop
+
+	; Wait for card to become ready to write
+	; Select PIU2 register
+	inc dl
+	inc dl	
+
+@@waitLoop:
+	in al, dx
+	test al, PIU2_TxRDY
+	jz @@waitLoop
+	
+	; Output TCR_EXT8 to TCR to indicate a command write
+	add dl, (TCR-PIU2)
+	mov al, TCR_EXT8
+	out dx, al
+	
+	; Now output data to PIU1
+	;add dl, (PIU1-TCR)
+	mov dx, 02A20h + PIU1
+	mov al, (value AND 0FFh)
+	out dx, al
+	
+	; Reset DX back to original value
+	dec dl	
+ENDM
