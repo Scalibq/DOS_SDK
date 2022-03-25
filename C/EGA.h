@@ -93,6 +93,14 @@
 #define EGA_FC_FEAT0				0x01	// These bits are used to ~ convey information to the feature connector.
 #define EGA_FC_FEAT1				0x02	// The output of these bits goes to the FEAT 0 (pin 19) and FEAT 1 (pin 17) of the feature connector.
 
+// ATTRIBUTE_CONTROLLER bits
+#define EGA_AC_HOR_PEL_PAN		(0x13|0x20)
+
+// GRAPHICS_CONTROLLER bits
+#define EGA_GC_LOGICAL_OP		0x03
+#define EGA_GC_WRITE_MODE		0x05
+#define EGA_GC_BYTE_MASK		0x08
+
 #define EGA_MAP_MASK		0x02
 
 #define EGA_VBLStart()	WaitBIT1(EGA_VIDEO_STATUS, EGA_VS_VRETRACE)

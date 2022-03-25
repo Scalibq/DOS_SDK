@@ -6,6 +6,7 @@
 // Relative offsets to base address
 #define DataPort 0x0
 #define StatPort 0x1
+#define ComPort 0x1
 
 /************************** is_input() ****************************
  Checks if there is a byte waiting to be read from the MPU. Returns

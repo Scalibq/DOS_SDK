@@ -152,8 +152,6 @@ MachineType GetMachineType(void)
 	return machineType;
 }
 
-uint8_t oldMaskPIC1, oldMaskPIC2;
-
 void InitPIC(uint16_t address, uint8_t ICW1, uint8_t ICW2, uint8_t ICW3, uint8_t ICW4)
 {
 #if defined(__BORLANDC__)

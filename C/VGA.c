@@ -1,9 +1,9 @@
 #include <dos.h>
 #include <conio.h>
+#include <malloc.h>
+#include <string.h>
 #include "VGA.h"
 #include "Common.h"
-#include "malloc.h"
-#include "string.h"
 
 // Index/data pairs for CRT Controller registers that differ between
 // mode 13h and mode X.
