@@ -7,6 +7,8 @@
 #include <alloc.h>
 #endif
 #include <math.h>
+#include "IBMPC.h"
+#include "PC98.h"
 #include "8259A.h"
 
 MachineType GetMachineType(void)
@@ -59,16 +61,16 @@ MachineType GetMachineType(void)
 		cli
 
 		// First check for physical second PIC
-		in al, PIC2_DATA
+		in al, PC_PIC2_DATA
 		mov bl, al	// Save PIC2 mask
 		not al		// Flip bits to see if they 'stick'
-		out PIC2_DATA, al
+		out PC_PIC2_DATA, al
 		out DELAY_PORT, al	// delay
-		in al, PIC2_DATA
+		in al, PC_PIC2_DATA
 		xor al, bl	// If writing worked, we expect al to be 0xFF
 		inc al		// Set zero flag on 0xFF
 		mov al, bl
-		out PIC2_DATA, al	// Restore mask
+		out PC_PIC2_DATA, al	// Restore mask
 		jnz @@noCascade
 
 		mov [machineType], MACHINE_PCAT
@@ -127,16 +129,16 @@ MachineType GetMachineType(void)
 		cli
 
 		// First check for physical second PIC
-		in al, PIC2_DATA
+		in al, PC_PIC2_DATA
 		mov bl, al	// Save PIC2 mask
 		not al		// Flip bits to see if they 'stick'
-		out PIC2_DATA, al
+		out PC_PIC2_DATA, al
 		out DELAY_PORT, al	// delay
-		in al, PIC2_DATA
+		in al, PC_PIC2_DATA
 		xor al, bl	// If writing worked, we expect al to be 0xFF
 		inc al		// Set zero flag on 0xFF
 		mov al, bl
-		out PIC2_DATA, al	// Restore mask
+		out PC_PIC2_DATA, al	// Restore mask
 		jnz @@noCascade
 
 		mov [machineType], 1//MACHINE_PCAT
@@ -152,22 +154,21 @@ MachineType GetMachineType(void)
 	return machineType;
 }
 
-void InitPIC(uint16_t address, uint8_t ICW1, uint8_t ICW2, uint8_t ICW3, uint8_t ICW4)
+void InitPIC(uint16_t command, uint16_t data, uint8_t ICW1, uint8_t ICW2, uint8_t ICW3, uint8_t ICW4)
 {
 #if defined(__BORLANDC__)
 	_asm {
 		cli
 
-		mov dx, [address]
-		inc dx
+		mov dx, [data]
 		in al, dx	// Save old mask
 		mov bl, al
-		dec dx
-
+		
+		mov dx, [command]
 		mov al, [ICW1]
 		out dx, al
 		out DELAY_PORT, al	// delay
-		inc dx
+		mov dx, [data]
 		mov al, [ICW2]
 		out	dx, al
 		out DELAY_PORT, al	// delay
@@ -203,16 +204,15 @@ skipICW4:;
 	_asm {
 		cli
 
-		mov dx, [address]
-		inc dx
+		mov dx, [data]
 		in al, dx	// Save old mask
 		mov bl, al
-		dec dx
-
+		
+		mov dx, [command]
 		mov al, [ICW1]
 		out dx, al
 		out DELAY_PORT, al	// delay
-		inc dx
+		mov dx, [data]
 		mov al, [ICW2]
 		out	dx, al
 		out DELAY_PORT, al	// delay
@@ -246,31 +246,31 @@ void SetAutoEOI(MachineType machineType)
 	switch (machineType)
 	{
 		case MACHINE_PCXT:
-			InitPIC(PIC1,
+			InitPIC(PC_PIC1_COMMAND, PC_PIC1_DATA,
 				ICW1_INIT|ICW1_SINGLE|ICW1_ICW4,
 				0x08,
 				0x00,
 				ICW4_8086|ICW4_BUF_SLAVE|ICW4_AEOI );
 			break;
 		case MACHINE_PCAT:
-			InitPIC(PIC1,
+			InitPIC(PC_PIC1_COMMAND, PC_PIC1_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				0x08,
 				0x04,
 				ICW4_8086|ICW4_AEOI );
-			InitPIC(PIC2,
+			InitPIC(PC_PIC2_COMMAND, PC_PIC2_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				0x70,
 				0x02,
 				ICW4_8086|ICW4_AEOI );
 			break;
 		case MACHINE_PS2:
-			InitPIC(PIC1,
+			InitPIC(PC_PIC1_COMMAND, PC_PIC1_DATA,
 				ICW1_INIT|ICW1_LEVEL|ICW1_ICW4,
 				0x08,
 				0x04,
 				ICW4_8086|ICW4_AEOI );
-			InitPIC(PIC2,
+			InitPIC(PC_PIC2_COMMAND, PC_PIC2_DATA,
 				ICW1_INIT|ICW1_LEVEL|ICW1_ICW4,
 				0x70,
 				0x02,
@@ -284,31 +284,31 @@ void RestorePICState(MachineType machineType)
 	switch (machineType)
 	{
 		case MACHINE_PCXT:
-			InitPIC(PIC1,
+			InitPIC(PC_PIC1_COMMAND, PC_PIC1_DATA,
 				ICW1_INIT|ICW1_SINGLE|ICW1_ICW4,
 				0x08,
 				0x00,
 				ICW4_8086|ICW4_BUF_SLAVE );
 			break;
 		case MACHINE_PCAT:
-			InitPIC(PIC1,
+			InitPIC(PC_PIC1_COMMAND, PC_PIC1_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				0x08,
 				0x04,
 				ICW4_8086 );
-			InitPIC(PIC2,
+			InitPIC(PC_PIC2_COMMAND, PC_PIC2_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				0x70,
 				0x02,
 				ICW4_8086 );
 			break;
 		case MACHINE_PS2:
-			InitPIC(PIC1,
+			InitPIC(PC_PIC1_COMMAND, PC_PIC1_DATA,
 				ICW1_INIT|ICW1_LEVEL|ICW1_ICW4,
 				0x08,
 				0x04,
 				ICW4_8086 );
-			InitPIC(PIC2,
+			InitPIC(PC_PIC2_COMMAND, PC_PIC2_DATA,
 				ICW1_INIT|ICW1_LEVEL|ICW1_ICW4,
 				0x70,
 				0x02,

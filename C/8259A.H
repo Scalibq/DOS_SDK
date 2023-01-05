@@ -4,13 +4,6 @@
 #include "Types.h"
 #include "Common.h"
 
-#define PIC1		0x20		/* IO base address for master PIC */
-#define PIC2		0xA0		/* IO base address for slave PIC */
-#define PIC1_COMMAND	PIC1
-#define PIC1_DATA	(PIC1+1)
-#define PIC2_COMMAND	PIC2
-#define PIC2_DATA	(PIC2+1)
-
 #define ICW1_ICW4	0x01		/* ICW4 (not) needed */
 #define ICW1_SINGLE	0x02		/* Single (cascade) mode */
 #define ICW1_INTERVAL4	0x04		/* Call address interval 4 (8) */
@@ -44,12 +37,13 @@ typedef enum
 {
 	MACHINE_PCXT,
 	MACHINE_PCAT,
-	MACHINE_PS2
+	MACHINE_PS2,
+	MACHINE_PC98
 } MachineType;
 
 MachineType GetMachineType(void);
 
-void InitPIC(uint16_t address, uint8_t ICW1, uint8_t ICW2, uint8_t ICW3, uint8_t ICW4);
+void InitPIC(uint16_t command, uint16_t data, uint8_t ICW1, uint8_t ICW2, uint8_t ICW3, uint8_t ICW4);
 void SetAutoEOI(MachineType machineType);
 void RestorePICState(MachineType machineType);
 
