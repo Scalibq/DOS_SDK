@@ -1,7 +1,7 @@
 #ifndef _PC98_H_
 #define _PC98_H_
 
-// 8253 Programmable Interrupt Timer
+// 8253 Programmable Interval Timer
 #define PC98_CTCMODECMDREG	0x77
 #define PC98_CHAN0PORT		0x71
 #define PC98_CHAN1PORT		0x73

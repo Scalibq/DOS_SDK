@@ -1,7 +1,7 @@
 #ifndef _IBM_PC_
 #define _IBM_PC_
 
-// 8253 Programmable Interrupt Timer
+// 8253 Programmable Interval Timer
 #define PC_CTCMODECMDREG	0x43
 #define PC_CHAN0PORT		0x40
 #define PC_CHAN1PORT		0x41
