@@ -39,7 +39,8 @@ void farfree(void far* pBuf)
 
 uint32_t _farfread( void far* buf, uint32_t size, uint32_t n, FILE *fp )
 {
-	uint32_t totalSize, retSize;
+	int32_t totalSize;
+	uint32_t retSize;
 	uint8_t huge* pDest = (uint8_t huge*)buf;
 	uint8_t* pLocalBuf = alloca(FILEBUFSIZE);
 	
