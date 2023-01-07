@@ -13,3 +13,10 @@ int IsPC98()
 	
 	return (regs.h.ah == 0x0F);
 }
+
+uint32_t GetPITFreqPC98()
+{
+	uint8_t far* pByte = (uint8_t*)(0x00000501L);
+	
+	return ((*pByte) & 0x80) ? PC98_PITFREQ_1 : PC98_PITFREQ_2;
+}
