@@ -6,9 +6,6 @@
 
 #define _countof(x)	(sizeof(x)/sizeof(x[0]))
 
-#define	PPIPORTB	0x61
-#define	DELAY_PORT	0xEE
-
 // Wait until a bit in an IO register becomes 0
 // Set IOREG to IO register
 // Set FLAG to test against the IO register

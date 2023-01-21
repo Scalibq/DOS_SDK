@@ -1,6 +1,9 @@
 #ifndef _IBM_PC_
 #define _IBM_PC_
 
+#define	PC_PPIPORTB	0x61
+#define	PC_DELAY_PORT	0xEE	// Unused port on PCs which can be used for dummy writes for a delay of 1 IO cycle
+
 // 8253 Programmable Interval Timer
 #define PC_CTCMODECMDREG	0x43
 #define PC_CHAN0PORT		0x40

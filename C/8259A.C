@@ -68,7 +68,7 @@ MachineType GetMachineType(void)
 		mov bl, al	// Save PIC2 mask
 		not al		// Flip bits to see if they 'stick'
 		out PC_PIC2_DATA, al
-		out DELAY_PORT, al	// delay
+		out PC_DELAY_PORT, al	// delay
 		in al, PC_PIC2_DATA
 		xor al, bl	// If writing worked, we expect al to be 0xFF
 		inc al		// Set zero flag on 0xFF
@@ -136,7 +136,7 @@ MachineType GetMachineType(void)
 		mov bl, al	// Save PIC2 mask
 		not al		// Flip bits to see if they 'stick'
 		out PC_PIC2_DATA, al
-		out DELAY_PORT, al	// delay
+		out PC_DELAY_PORT, al	// delay
 		in al, PC_PIC2_DATA
 		xor al, bl	// If writing worked, we expect al to be 0xFF
 		inc al		// Set zero flag on 0xFF
@@ -170,11 +170,11 @@ void InitPIC(uint16_t command, uint16_t data, uint8_t ICW1, uint8_t ICW2, uint8_
 		mov dx, [command]
 		mov al, [ICW1]
 		out dx, al
-		out DELAY_PORT, al	// delay
+		out PC_DELAY_PORT, al	// delay
 		mov dx, [data]
 		mov al, [ICW2]
 		out	dx, al
-		out DELAY_PORT, al	// delay
+		out PC_DELAY_PORT, al	// delay
 
 		// Do we need to set ICW3?
 		test [ICW1], ICW1_SINGLE
@@ -192,7 +192,7 @@ skipICW3:;
 
 		mov al, [ICW4]
 		out dx, al
-		out DELAY_PORT, al	// delay
+		out PC_DELAY_PORT, al	// delay
 	}
 skipICW4:;
 	_asm {
@@ -214,11 +214,54 @@ skipICW4:;
 		mov dx, [command]
 		mov al, [ICW1]
 		out dx, al
-		out DELAY_PORT, al	// delay
+		out PC_DELAY_PORT, al	// delay
 		mov dx, [data]
 		mov al, [ICW2]
 		out	dx, al
-		out DELAY_PORT, al	// delay
+		out PC_DELAY_PORT, al	// delay
+
+		// Do we need to set ICW3?
+		test [ICW1], ICW1_SINGLE
+		jnz skipICW3
+
+		mov al, [ICW3]
+		out dx, al
+		out PC_DELAY_PORT, al	// delay
+skipICW3:
+		// Do we need to set ICW4?
+		test [ICW1], ICW1_ICW4
+		jz skipICW4
+
+		mov al, [ICW4]
+		out dx, al
+		out PC_DELAY_PORT, al	// delay
+skipICW4:
+		mov al, bl		// Restore old mask
+		out dx, al
+
+		sti
+	}
+#endif
+}
+
+void InitPICPC98(uint16_t command, uint16_t data, uint8_t ICW1, uint8_t ICW2, uint8_t ICW3, uint8_t ICW4)
+{
+#if defined(__BORLANDC__)
+	_asm {
+		cli
+
+		mov dx, [data]
+		in al, dx	// Save old mask
+		mov bl, al
+		
+		mov dx, [command]
+		mov al, [ICW1]
+		out dx, al
+		out PC98_DELAY_PORT, al	// delay
+		mov dx, [data]
+		mov al, [ICW2]
+		out	dx, al
+		out PC98_DELAY_PORT, al	// delay
 
 		// Do we need to set ICW3?
 		test [ICW1], ICW1_SINGLE
@@ -227,6 +270,50 @@ skipICW4:;
 		mov al, [ICW3]
 		out dx, al
 		out DELAY_PORT, al	// delay
+	}
+skipICW3:;
+	_asm {
+		// Do we need to set ICW4?
+		test [ICW1], ICW1_ICW4
+		jz skipICW4
+
+		mov al, [ICW4]
+		out dx, al
+		out PC98_DELAY_PORT, al	// delay
+	}
+skipICW4:;
+	_asm {
+		mov al, bl		// Restore old mask
+		out dx, al
+
+		sti
+	}
+#endif
+
+#if defined(__WATCOMC__)
+	_asm {
+		cli
+
+		mov dx, [data]
+		in al, dx	// Save old mask
+		mov bl, al
+		
+		mov dx, [command]
+		mov al, [ICW1]
+		out dx, al
+		out PC98_DELAY_PORT, al	// delay
+		mov dx, [data]
+		mov al, [ICW2]
+		out	dx, al
+		out PC98_DELAY_PORT, al	// delay
+
+		// Do we need to set ICW3?
+		test [ICW1], ICW1_SINGLE
+		jnz skipICW3
+
+		mov al, [ICW3]
+		out dx, al
+		out PC_DELAY_PORT, al	// delay
 skipICW3:
 		// Do we need to set ICW4?
 		test [ICW1], ICW1_ICW4
@@ -234,7 +321,7 @@ skipICW3:
 
 		mov al, [ICW4]
 		out dx, al
-		out DELAY_PORT, al	// delay
+		out PC98_DELAY_PORT, al	// delay
 skipICW4:
 		mov al, bl		// Restore old mask
 		out dx, al
@@ -280,12 +367,12 @@ void SetAutoEOI(MachineType machineType)
 				ICW4_8086|ICW4_AEOI );
 			break;
 		case MACHINE_PC98:
-			InitPIC(PC98_PIC1_COMMAND, PC98_PIC1_DATA,
+			InitPICPC98(PC98_PIC1_COMMAND, PC98_PIC1_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				PC98_PIC1_VECTOR_BASE,
 				0x04,
 				ICW4_8086|ICW4_AEOI );
-			InitPIC(PC98_PIC2_COMMAND, PC98_PIC2_DATA,
+			InitPICPC98(PC98_PIC2_COMMAND, PC98_PIC2_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				PC98_PIC2_VECTOR_BASE,
 				0x02,
@@ -330,12 +417,12 @@ void RestorePICState(MachineType machineType)
 				ICW4_8086 );
 			break;
 		case MACHINE_PC98:
-			InitPIC(PC98_PIC1_COMMAND, PC98_PIC1_DATA,
+			InitPICPC98(PC98_PIC1_COMMAND, PC98_PIC1_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				PC98_PIC1_VECTOR_BASE,
 				0x04,
 				ICW4_8086 );
-			InitPIC(PC98_PIC2_COMMAND, PC98_PIC2_DATA,
+			InitPICPC98(PC98_PIC2_COMMAND, PC98_PIC2_DATA,
 				ICW1_INIT|ICW1_ICW4,
 				PC98_PIC2_VECTOR_BASE,
 				0x02,

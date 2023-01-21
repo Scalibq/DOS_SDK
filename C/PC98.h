@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define	PC98_DELAY_PORT	0x5F	// IO port for constant recovery time. Write to this port takes 0.6 microseconds
+
 // 8253 Programmable Interval Timer
 #define PC98_CTCMODECMDREG	0x77
 #define PC98_CHAN0PORT		0x71
