@@ -22,3 +22,31 @@ PC98_PIC2_VECTOR_BASE	equ	10h
 
 ;int IsPC98();
 ;uint32_t GetPITFreqPC98();
+
+; Sets zero-flag on exit if this is a PC-98 machine
+IsPC98 MACRO
+	; PC-98 has a very different implementation of INT 10h
+	; On a DOS machine, this call will return the current video mode
+	; On a PC-98, AH will not be overwritten
+	mov		ah, 0Fh
+	int		10h
+	cmp		ah, 0Fh	; Set zero-flag if this is a PC-98 machine
+ENDM
+
+; Returns PIT frequency in AX
+GetPITFreqPC98	MACRO
+	; PC-98 has a configuration byte at 0000:0501
+	; If bit 7 of this byte is set, the machine has an 8 MHz base clock, and the PIT frequency is 1996800 Hz
+	; If bit 7 is not set, the machine has a 5 or 10 MHz base clock, and the PIT frequency is 2457600 Hz
+	push	es
+	xor		ax, ax
+	mov		es, ax
+	mov		al, es:[501h]
+	pop		es
+	test	al, 80h
+	mov		ax, PC98_PITFREQ_1
+	je		@@end
+	mov		ax, PC98_PITFREQ_2
+	
+	@@end
+ENDM
