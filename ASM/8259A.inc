@@ -1,9 +1,4 @@
-PIC1			equ	020h	; IO base address for master PIC
-PIC2			equ	0A0h	; IO base address for slave PIC
-PIC1_COMMAND	equ	PIC1
-PIC1_DATA		equ	(PIC1+1)
-PIC2_COMMAND	equ	PIC2
-PIC2_DATA		equ	(PIC2+1)
+include IBMPC.inc
 
 ICW1_ICW4		equ	01h		; ICW4 (not) needed
 ICW1_SINGLE		equ	02h		; Single (cascade) mode
@@ -47,24 +42,24 @@ InitPIC	MACRO	address, ICW1, ICW2, ICW3, ICW4
 
 	mov al, ICW1
 	out dx, al
-	out DELAY_PORT, al	; delay
+	out PC_DELAY_PORT, al	; delay
 	inc dx
 	mov al, ICW2
 	out	dx, al
-	out DELAY_PORT, al	; delay
+	out PC_DELAY_PORT, al	; delay
 
 	; Do we need to set ICW3?
 IFE (ICW1 and ICW1_SINGLE)
 	mov al, ICW3
 	out dx, al
-	out DELAY_PORT, al	; delay
+	out PC_DELAY_PORT, al	; delay
 ENDIF
 
 	; Do we need to set ICW4?
 IF (ICW1 and ICW1_ICW4)
 	mov al, ICW4
 	out dx, al
-	out DELAY_PORT, al	; delay
+	out PC_DELAY_PORT, al	; delay
 ENDIF
 			
 	mov al, bl		; Restore old mask

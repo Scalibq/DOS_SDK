@@ -1,3 +1,4 @@
+include IBMPC.inc
 include common.inc
 
 ;The Mode/Command register at I/O address 43h is defined as follows:
@@ -46,13 +47,7 @@ MODE5           EQU      00001010b
 BINARY          EQU      00000000b
 BCD             EQU      00000001b
 
-CTCMODECMDREG   EQU      043h
-CHAN0PORT       EQU      040h
-CHAN1PORT       EQU      041h
-CHAN2PORT       EQU      042h
 CGAPITDIVRATE   EQU      19912          ;(912*262) div 12
-
-PITFREQ         EQU      1193182
 
 InitPIT	MACRO	channel, mode, rate
 	PORT = CHAN0PORT
@@ -65,12 +60,12 @@ ELSEIF (channel EQ CHAN2)
 ENDIF
 
 	mov     al, channel or mode
-	out     CTCMODECMDREG, al
+	out     PC_CTCMODECMDREG, al
 
 IF (mode and AMBOTH)
 	mov     ax, rate
 	out     PORT, al		; output lobyte first
-	out     DELAY_PORT, al	; allow device recovery time
+	out     PC_DELAY_PORT, al	; allow device recovery time
 	mov     al, ah			; output hibyte
 	out     PORT, al
 ELSEIF ((mode and AMLOBYTE) or (mode and AMHIBYTE))
@@ -83,22 +78,22 @@ ResetPIT MACRO	channel
 ResetMODE equ 
 IF (channel EQ CHAN0)
 	mov     al, channel or (AMBOTH or MODE3 or BINARY)
-	out     CTCMODECMDREG, al
+	out     PC_CTCMODECMDREG, al
 	xor		ax, ax
-	out     CHAN0PORT, al	; output lobyte first
-	out     DELAY_PORT, al	; allow device recovery time
+	out     PC_CHAN0PORT, al	; output lobyte first
+	out     PC_DELAY_PORT, al	; allow device recovery time
 	out     CHAN0PORT, al
 ELSEIF (channel EQ CHAN1)
 	mov     al, channel or (AMLOBYTE or MODE2 or BINARY)
-	out     CTCMODECMDREG, al
+	out     PC_CTCMODECMDREG, al
 	mov		al, 18	; Standard memory refresh value
 	out     CHAN1PORT, al	; output lobyte
 ELSEIF (channel EQ CHAN2)
 	mov     al, channel or (AMBOTH or MODE3 or BINARY)
-	out     CTCMODECMDREG, al
+	out     PC_CTCMODECMDREG, al
 	xor		ax, ax
-	out     CHAN2PORT, al	; output lobyte first
-	out     DELAY_PORT, al	; allow device recovery time
-	out		CHAN2PORT, al
+	out     PC_CHAN2PORT, al	; output lobyte first
+	out     PC_DELAY_PORT, al	; allow device recovery time
+	out		PC_CHAN2PORT, al
 ENDIF
 ENDM

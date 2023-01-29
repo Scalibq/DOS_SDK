@@ -1,6 +1,3 @@
-PPIPORTB	equ	061h
-DELAY_PORT		equ	0EEh
-
 ; Wait until a bit in an IO register becomes 0
 ; Set IOREG to IO register (immediate or DX) beforehand
 ; Set FLAG to a register or immediate to test against the IO register

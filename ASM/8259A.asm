@@ -1,6 +1,7 @@
 .8086
 .Model Small
 
+include IBMPC.inc
 include common.inc
 include 8259A.inc
 
@@ -51,12 +52,12 @@ GetMachineType PROC
 	cli
 
 	; First check for physical second PIC
-	in al, PIC2_DATA
+	in al, PC_PIC2_DATA
 	mov bl, al	; Save PIC2 mask
 	not al		; Flip bits to see if they 'stick'
-	out PIC2_DATA, al
-	out DELAY_PORT, al	; delay
-	in al, PIC2_DATA
+	out PC_PIC2_DATA, al
+	out PC_DELAY_PORT, al	; delay
+	in al, PC_PIC2_DATA
 	xor al, bl	; If writing worked, we expect al to be 0FFh
 	inc al		; Set zero flag on 0FFh
 	mov al, bl
@@ -84,9 +85,9 @@ RestorePIC	PROC
 XT_ICW1	equ	(ICW1_INIT or ICW1_SINGLE or ICW1_ICW4)
 XT_ICW4	equ	(ICW4_8086 or ICW4_BUF_SLAVE)
 		
-	InitPIC PIC1, XT_ICW1, 08h, 0h, XT_ICW4
+	InitPIC PC_PIC1, XT_ICW1, 08h, 0h, XT_ICW4
 	mov al, OCW2_EOI
-	out PIC1, al
+	out PC_PIC1, al
 	sti	
 	ret
 		
@@ -96,22 +97,22 @@ XT_ICW4	equ	(ICW4_8086 or ICW4_BUF_SLAVE)
 
 AT_ICW1	equ	(ICW1_INIT or ICW1_ICW4)
 
-	InitPIC PIC1, AT_ICW1, 08h, 04h, ICW4_8086
-	InitPIC PIC2, AT_ICW1, 070h, 02h, ICW4_8086
+	InitPIC PC_PIC1, AT_ICW1, 08h, 04h, ICW4_8086
+	InitPIC PC_PIC2, AT_ICW1, 070h, 02h, ICW4_8086
 	mov al, OCW2_EOI
-	out PIC1, al
-	out PIC2, al
+	out PC_PIC1, al
+	out PC_PIC2, al
 	sti
 	ret
 
 @@notAT:
 PS2_ICW1	equ	(ICW1_INIT or ICW1_LEVEL or ICW1_ICW4)
 
-	InitPIC PIC1, PS2_ICW1, 08h, 04h, ICW4_8086
-	InitPIC PIC2, PS2_ICW1, 070h, 02h, ICW4_8086
+	InitPIC PC_PIC1, PS2_ICW1, 08h, 04h, ICW4_8086
+	InitPIC PC_PIC2, PS2_ICW1, 070h, 02h, ICW4_8086
 	mov al, OCW2_EOI
-	out PIC1, al
-	out PIC2, al
+	out PC_PIC1, al
+	out PC_PIC2, al
 	sti
 	ret		
 RestorePIC	ENDP
@@ -125,7 +126,7 @@ InitAEOI	PROC
 
 XT_ICW4_AEOI	equ	(XT_ICW4 or ICW4_AEOI)
 AT_ICW4_AEOI	equ	(ICW4_8086 or ICW4_AEOI)
-	InitPIC PIC1, XT_ICW1, 08h, 0h, XT_ICW4_AEOI
+	InitPIC PC_PIC1, XT_ICW1, 08h, 0h, XT_ICW4_AEOI
 	sti
 	ret
 		
@@ -135,16 +136,16 @@ AT_ICW4_AEOI	equ	(ICW4_8086 or ICW4_AEOI)
 
 AT_ICW1	equ	(ICW1_INIT or ICW1_ICW4)
 
-	InitPIC PIC1, AT_ICW1, 08h, 04h, AT_ICW4_AEOI
-	InitPIC PIC2, AT_ICW1, 070h, 02h, AT_ICW4_AEOI
+	InitPIC PC_PIC1, AT_ICW1, 08h, 04h, AT_ICW4_AEOI
+	InitPIC PC_PIC2, AT_ICW1, 070h, 02h, AT_ICW4_AEOI
 	sti
 	ret
 
 @@notAT:
 PS2_ICW1	equ	(ICW1_INIT or ICW1_LEVEL or ICW1_ICW4)
 
-	InitPIC PIC1, PS2_ICW1, 08h, 04h, AT_ICW4_AEOI
-	InitPIC PIC2, PS2_ICW1, 070h, 02h, AT_ICW4_AEOI
+	InitPIC PC_PIC1, PS2_ICW1, 08h, 04h, AT_ICW4_AEOI
+	InitPIC PC_PIC2, PS2_ICW1, 070h, 02h, AT_ICW4_AEOI
 	sti
 	ret		
 InitAEOI	ENDP
