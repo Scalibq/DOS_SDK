@@ -50,13 +50,13 @@ BCD             EQU      00000001b
 CGAPITDIVRATE   EQU      19912          ;(912*262) div 12
 
 InitPIT	MACRO	channel, mode, rate
-	PORT = CHAN0PORT
+	PORT = PC_CHAN0PORT
 IF (channel EQ CHAN0)
-	PORT = CHAN0PORT
+	PORT = PC_CHAN0PORT
 ELSEIF (channel EQ CHAN1)
 	PORT = CHAN1PORT
 ELSEIF (channel EQ CHAN2)
-	PORT = CHAN2PORT
+	PORT = PC_CHAN2PORT
 ENDIF
 
 	mov     al, channel or mode
@@ -82,12 +82,12 @@ IF (channel EQ CHAN0)
 	xor		ax, ax
 	out     PC_CHAN0PORT, al	; output lobyte first
 	out     PC_DELAY_PORT, al	; allow device recovery time
-	out     CHAN0PORT, al
+	out     PC_CHAN0PORT, al
 ELSEIF (channel EQ CHAN1)
 	mov     al, channel or (AMLOBYTE or MODE2 or BINARY)
 	out     PC_CTCMODECMDREG, al
 	mov		al, 18	; Standard memory refresh value
-	out     CHAN1PORT, al	; output lobyte
+	out     PC_CHAN1PORT, al	; output lobyte
 ELSEIF (channel EQ CHAN2)
 	mov     al, channel or (AMBOTH or MODE3 or BINARY)
 	out     PC_CTCMODECMDREG, al
