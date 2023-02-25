@@ -3,9 +3,11 @@
 
 include IBMPC.inc
 include common.inc
-include 8259A.inc
+include 8259Ai.inc
 
 LOCALS @@
+
+PUBLIC GetMachineType, RestorePIC, InitAEOI
 
 .code
 ; Returns machine type in cl

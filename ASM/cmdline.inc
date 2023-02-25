@@ -1,8 +1,5 @@
-CMDLINE STRUC
-	argc	db	?
-	argv	dw	127 dup(?)
-CMDLINE ENDS
+include cmddata.inc
 
-GLOBAL GetCmdLine:near
-GLOBAL ParseHex:near
-GLOBAL ParseDec:near
+EXTRN GetCmdLine:near
+EXTRN ParseHex:near
+EXTRN ParseDec:near

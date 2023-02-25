@@ -1,9 +1,11 @@
 .8086
 .Model Small
 
-include cmdline.inc
+include cmddata.inc
 
 LOCALS @@
+
+PUBLIC GetCmdLine, ParseHex, ParseDec
 
 .code
 ; Input:
