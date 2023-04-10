@@ -24,7 +24,7 @@
 #define CGA_MC_BLINK		0x20	// Enables blink attribute in alphanumeric modes, else intensity
 
 // Default CGA modes - combine with CGA_MC_VIDEO_ENABLE to enable the display
-#define CGA_MC_40x25BW		(CGA_MC_BW |r CGA_MC_BLINK)
+#define CGA_MC_40x25BW		(CGA_MC_BW | CGA_MC_BLINK)
 #define CGA_MC_40x25C		(CGA_MC_BLINK)
 #define CGA_MC_80x25BW		(CGA_MC_80C | CGA_MC_BW | CGA_MC_BLINK)
 #define CGA_MC_80x25C		(CGA_MC_80C | CGA_MC_BLINK)
