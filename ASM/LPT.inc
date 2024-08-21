@@ -7,3 +7,4 @@ PP_BI_DIRECT    equ	030h
 
 ; Parallel port status constants
 PP_ERROR        equ	08h
+PP_ACK          equ 40h

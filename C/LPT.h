@@ -10,5 +10,6 @@
 
 // Parallel port status constants
 #define PP_ERROR        0x8
+#define PP_ACK          0x40
 
 #endif /* _LPT_H_ */
