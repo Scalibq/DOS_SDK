@@ -20,9 +20,6 @@ PC98_PIC2_DATA		equ	(PC98_PIC2+2)
 PC98_PIC1_VECTOR_BASE	equ	08h
 PC98_PIC2_VECTOR_BASE	equ	10h
 
-;int IsPC98();
-;uint32_t GetPITFreqPC98();
-
 ; Sets zero-flag on exit if this is a PC-98 machine
 IsPC98 MACRO
 	; PC-98 has a very different implementation of INT 10h
