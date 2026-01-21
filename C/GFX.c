@@ -8,7 +8,7 @@ uint8_t Is6845(uint16_t addr)
 	uint8_t value, v, i;
 
 	// Get original value
-	outp(addr, MC_HIGH_CURSOR);
+	outp(addr, MC_LOW_CURSOR);
 	value = inp(addr+1);
 	
 	// Write new value
@@ -21,7 +21,7 @@ uint8_t Is6845(uint16_t addr)
 	v = inp(addr+1);
 
 	// Restore original value
-	outp(addr+1, MC_HIGH_CURSOR);
+	outp(addr+1, value);
 
 	return (v == 0x4F);
 }
