@@ -6,7 +6,7 @@ int IsPC98()
 	// PC-98 has a very different implementation of INT 10h
 	// On a DOS machine, this call will return the current video mode
 	// On a PC-98, AH will not be overwritten
-	union REGPACK regs;
+	union REGPACK regs = { 0 };
 	regs.h.ah = 0x0F;
 
 	intr(0x10, &regs);
