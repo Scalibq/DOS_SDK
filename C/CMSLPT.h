@@ -1,4 +1,4 @@
-#ifndef _CMSPT_H_
+#ifndef _CMSLPT_H_
 #define _CMSLPT_H_
 
 #include <stdint.h>
