@@ -1,6 +1,6 @@
 #include <conio.h>
 #include <dos.h>
-#include "TNDLPT.h"
+#include "CMSLPT.h"
 #include "LPT.h"
 
 /*
@@ -47,6 +47,7 @@ void WriteCMSLPTPort0Data(uint16_t base, uint8_t val)
 	inp( base + 2);		// Delay
 	inp( base + 2);		// Delay
 	inp( base + 2);		// Delay
+	inp( base + 2);		// Delay
 
 	outp( base + 2, PP_NOT_SELECT | PP_INIT | PP_NOT_STROBE);	// toggle WR
 }
@@ -70,10 +71,11 @@ void WriteCMSLPTPort1Data(uint16_t base, uint8_t val)
 	// Set data
 	outp( base, val);
 	
-	outp( base + 2, PP_INIT | PP_NOT_AUTOFD | PP_NOT_STROBE);	// CS1, ~A0
+	outp( base + 2, PP_INIT | PP_NOT_AUTOFD | PP_NOT_STROBE);	// CS2, ~A0
 	
 	outp( base + 2,  PP_NOT_AUTOFD | PP_NOT_STROBE );			// toggle WR
 	
+	inp( base + 2);		// Delay
 	inp( base + 2);		// Delay
 	inp( base + 2);		// Delay
 	inp( base + 2);		// Delay
