@@ -21,6 +21,8 @@ CMSLPT is wired up to the following pins
 
 void WriteCMSLPTPort0Addr(uint16_t base, uint8_t val)
 {
+	volatile uint8_t delay;
+
 	// Set data
 	outp( base, val);
 	
@@ -28,13 +30,16 @@ void WriteCMSLPTPort0Addr(uint16_t base, uint8_t val)
 	
 	outp( base + 2, PP_NOT_SELECT);				// toggle WR
 	
-	inp( base + 2);		// Delay
+	delay = inp( base + 2);		// Delay
 
 	outp( base + 2, PP_NOT_SELECT | PP_INIT);				// toggle WR
 }
 
 void WriteCMSLPTPort0Data(uint16_t base, uint8_t val)
 {
+	uint8_t i;
+	volatile uint8_t delay;
+
 	// Set data
 	outp( base, val);
 	
@@ -42,18 +47,16 @@ void WriteCMSLPTPort0Data(uint16_t base, uint8_t val)
 	
 	outp( base + 2, PP_NOT_SELECT | PP_NOT_STROBE );			// toggle WR
 	
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
+	for (i = 0; i < 6; i++)
+		delay = inp( base + 2);		// Delay
 
 	outp( base + 2, PP_NOT_SELECT | PP_INIT | PP_NOT_STROBE);	// toggle WR
 }
 
 void WriteCMSLPTPort1Addr(uint16_t base, uint8_t val)
 {
+	volatile uint8_t delay;
+
 	// Set data
 	outp( base, val);
 	
@@ -61,13 +64,16 @@ void WriteCMSLPTPort1Addr(uint16_t base, uint8_t val)
 	
 	outp( base + 2, PP_NOT_AUTOFD);				// toggle WR
 	
-	inp( base + 2);		// Delay
+	delay = inp( base + 2);		// Delay
 
 	outp( base + 2, PP_INIT | PP_NOT_AUTOFD);	// toggle WR
 }
 
 void WriteCMSLPTPort1Data(uint16_t base, uint8_t val)
 {
+	uint8_t i;
+	volatile uint8_t delay;
+
 	// Set data
 	outp( base, val);
 	
@@ -75,12 +81,8 @@ void WriteCMSLPTPort1Data(uint16_t base, uint8_t val)
 	
 	outp( base + 2,  PP_NOT_AUTOFD | PP_NOT_STROBE );			// toggle WR
 	
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
-	inp( base + 2);		// Delay
+	for (i = 0; i < 6; i++)
+		delay = inp( base + 2);		// Delay
 
 	outp( base + 2, PP_INIT | PP_NOT_AUTOFD | PP_NOT_STROBE);	// toggle WR
 }
