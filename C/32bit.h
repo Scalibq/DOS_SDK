@@ -1,7 +1,7 @@
 #ifndef _32BIT_H_
 #define _32BIT_H_
 
-#if defined(M_I386) || defined(_M_IX86)
+#if defined(M_I386)
 #define farmalloc malloc
 #define farfree free
 #define _fmalloc malloc

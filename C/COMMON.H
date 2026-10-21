@@ -16,7 +16,7 @@ void WaitBIT0(int IOREG, uint8_t FLAG);
 // Set FLAG to test against the IO register
 void WaitBIT1(int IOREG, uint8_t FLAG);
 
-#if !(defined(M_I386) || defined(_M_IX86)) 
+#if !defined(M_I386) 
 void far* farmalloc(unsigned long size);
 void farfree(void far* pBuf);
 uint32_t _farfread( void far* buf, uint32_t size, uint32_t n, FILE *fp );
