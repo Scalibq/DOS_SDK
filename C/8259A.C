@@ -11,6 +11,7 @@
 #include "PC98.h"
 #include "8259A.h"
 
+#ifndef M_I386
 MachineType GetMachineType(void)
 {
 	MachineType machineType;
@@ -156,6 +157,19 @@ MachineType GetMachineType(void)
 
 	return machineType;
 }
+#else
+MachineType GetMachineType(void)
+{
+	union REGPACK regs = { 0 };
+	
+	MachineType machineType;
+	
+	if (IsPC98())
+		return MACHINE_PC98;
+
+	return MACHINE_PCAT;
+}
+#endif
 
 void InitPIC(uint16_t command, uint16_t data, uint8_t ICW1, uint8_t ICW2, uint8_t ICW3, uint8_t ICW4)
 {
